@@ -1,4 +1,4 @@
-package fciencias.unam.tdi.demo.entity;
+package fciencias.unam.SyL.entity;
 
 import lombok.*;
 
