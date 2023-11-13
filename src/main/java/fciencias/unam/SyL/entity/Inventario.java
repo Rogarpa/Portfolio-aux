@@ -67,7 +67,7 @@ public class Inventario{
 	
 	@Column(name="medida")
 	@NotNull(message="La medida es requerida")
-    private float medida;
+    private String medida;
 	//con que etiqueta podemos acotar a que sean los gramos, etc
     
     /* Precio del producto. */
@@ -83,8 +83,8 @@ public class Inventario{
 	
 	/* Comentario del prodcuto.
 	 * Lo acotamos a 1, no queremos una lista. */
-	@Column(name="comentario")
-	private String Comentario;
+	@Column(name="comentarios")
+	private String comentarios;
 	
 	/* Provedor del prodcuto. */
 	@Column(name="provedor")
