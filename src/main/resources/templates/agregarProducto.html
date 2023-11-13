@@ -1,120 +1,116 @@
 <!DOCTYPE html>
 <html   
+        lang="es"
+        xmlns:th="http://www.thymeleaf.org"
         xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-        layout:decorate="~{index}"
->
+        layout:decorate="~{layout}" >
 <head>
     <title>Agregar Producto</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous"/>
+    
 </head>
 <body>
     <div layout:fragment="main-header">
+        <br>
         <h1 class="mt-5 text-center"><strong>Agregar producto</strong></h1>
     </div>
     <div layout:fragment="main-content">
         <article>
-            
             <div class="row">
-                <div class="col-md-6 mx-auto">
-                    <form th:action="@{/guardar}" method="POST">
-                        <!--Nombre del producto-->
-                        <div class="form-group">
-                            <label for="nombre">Nombre del producto</label>
-                            <input type="text" class="form-control"  aria-label="Small" placeholder="Nombre del producto" id="nombre" name="nombre"/>
-                            <div class="text-danger">
-                            </div>
-                        </div>
-
-                        <!--Tipo de producto-->
-                        <div class="form-group">
-                            <label for="productType">Tipo de Producto:</label>
-                                <select id="productType" name="productType" required >
-                                    <option value="Perecedero">Perecedero</option>
-                                    <option value="Empacar">para Empacar</option>
-                                </select> 
-                                <br>
-                            <small id="productTypeHelp" class="form-text text-muted">Por favor selecciona 1.</small>
-                            <div class="text-danger">
-                            </div>
-                        </div>
-
-                        
-                        <!-- Fecha de caducidad -->
-                        <div class="form-group">
-                            <label for="expiracion">Fecha de Caducidad:</label>
-                            <input type="date" id="expiracion" name="expiracion"/>
-                            <div class="text-danger">
-                            </div>
-                        </div>
-
-                        <!-- Fecha -->
-                        <div class="form-group">
-                            <label for="adquisicion">Fecha de Adquisicion:</label>
-                            <input type="date" id="adquisicion" name="adquisicion" required />
-                            <div class="text-danger">
+                <div class="col-md-5 mx-auto my-2">
+                    <div class="card border-secundary">
+                        <div class="card-body">
+                            <form th:action="@{/guardar}" method="POST">
+                                <!--Nombre del producto-->
+                                <div class="form-group">
+                                    <label for="nombre">Nombre del producto</label>
+                                    <input type="text" class="form-control"  aria-label="Small" placeholder="Nombre del producto" id="nombre" name="nombre"/>
+                                    <div class="text-danger">
+                                    </div>
+                                </div>
                             
-                            </div>
-                        </div>
-
-                        <!--Cantidad en existencia-->
-                        <div class="form-group">
-                            <label for="cantidad">Cantidad en existencia</label>
-                            <input type="number" class="form-control"  aria-label="Small" name="cantidad" id="cantidad"  placeholder="Stock Existente"/>
-                            <div class="text-danger">
-                            </div>
-                        </div>
-                        <!--Medida-->
-                        <div class="form-group">
-                            <label for="medida">Medida:</label>
-                            <select id="medida" name="medida" required >
-                                <option value="g">Gramos</option>
-                                <option value="kg">Kilogramos</option>
-                                <option value="ml">Mililitros</option>
-                                <option value="l">Litros</option>
-                                <option value="p">Pieza(s)</option>
-                            </select>
-                            <div class="text-danger">
+                                <!--Tipo de producto-->
+                                <div class="form-group">
+                                    <label for="productType">Tipo de Producto:</label>
+                                        <select id="productType" class="form-control" name="productType" required >
+                                            <option value="Perecedero">Perecedero</option>
+                                            <option value="Empacar">para empacar</option>
+                                        </select> 
+                                    <div class="text-danger">
+                                    </div>
+                                </div>
+                                <!-- Fecha de caducidad -->
+                                <div class="form-group">
+                                    <label for="expiracion">Fecha de Caducidad:</label>
+                                    <input type="date" class="form-control " id="expiracion" name="expiracion"/>
+                                    <div class="text-danger">
+                                    </div>
+                                </div>
+                                <!-- Fecha -->
+                                <div class="form-group">
+                                    <label for="adquisicion">Fecha de Adquisicion:</label>
+                                    <input type="date" class="form-control" id="adquisicion" name="adquisicion" required />
+                                    <div class="text-danger">
+                                    
+                                    </div>
+                                </div>
                             
-                            </div>
-                        </div>
-                        <!--Precio-->
-                        <div class="form-group">
-                            <label for="precio">Precio</label>
-                            <input type="number" id="precio" name="precio" class="form-control"  aria-label="Small" placeholder="Precio del Producto">
-                            <div class="text-danger">
+                                <!--Cantidad en existencia-->
+                                <div class="form-group">
+                                    <label for="cantidad">Cantidad en existencia</label>
+                                    <input type="number" class="form-control"  aria-label="Small" name="cantidad" id="cantidad"  placeholder="Stock Existente"/>
+                                    <div class="text-danger">
+                                    </div>
+                                </div>
+                                <!--Medida-->
+                                <div class="form-group">
+                                    <label for="medida">Medida:</label>
+                                    <select id="medida" name="medida" class="form-control" required >
+                                        <option value="g">Gramos</option>
+                                        <option value="kg">Kilogramos</option>
+                                        <option value="ml">Mililitros</option>
+                                        <option value="l">Litros</option>
+                                        <option value="p">Pieza(s)</option>
+                                    </select>
+                                    <div class="text-danger">
+                                    
+                                    </div>
+                                </div>
+                                <!--Precio-->
+                                <div class="form-group">
+                                    <label for="precio">Precio</label>
+                                    <input type="number" id="precio" name="precio" class="form-control"  aria-label="Small" placeholder="Precio del Producto">
+                                    <div class="text-danger">
+                                    
+                                    </div>
+                                </div>
+                                <!--Nombre del provedor-->
+                                <div class="form-group">
+                                    <label for="Pnombre">Nombre del Proveedor:</label>
+                                    <input type="text" class="form-control"  aria-label="Small" id="Pnombre" name="Pnombre" placeholder="Proveedor del Producto" >
+                                    <div class="text-danger">
+                                    
+                                    </div>
+                                </div>
+                                <!--Descripcion -->
+                                <div class="form-group">
+                                    <label for="descripcion">Descripción del Producto (breve y opcional):</label>
+                                    <input class="form-control"  aria-label="Small" type="text" name="descripcion" id="descripcion"  placeholder="Descripción breve del Producto(opcional)" />
+                                </div>
+                                <!--Comentarios-->
+                                <div class="form-group">
+                                    <label for="comentarios">Comentarios Adicionales (opcional):</label>
+                                    <textarea class="form-control"  aria-label="Small" id="comentarios" name="comentarios"  placeholder="Comentarios Adicionales del Producto"></textarea>
+                                </div>
                             
-                            </div>
+                                <p></p>
+                                <input type="submit" value="Guardar" />
+                            </form>
                         </div>
-                        <!--Nombre del provedor-->
-                        <div class="form-group">
-                            <label for="Pnombre">Nombre del Proveedor:</label>
-                            <input type="text" class="form-control"  aria-label="Small" id="Pnombre" name="Pnombre" placeholder="Proveedor del Producto" >
-                            <div class="text-danger">
-                            
-                            </div>
-                        </div>
-                        <!--Descripcion -->
-                        <div class="form-group">
-                            <label for="descripcion">Descripci�n del Producto (breve y opcional):</label>
-                            <input class="form-control"  aria-label="Small" type="text" name="descripcion" id="descripcion"  placeholder="Descripci�n breve del Producto(opcional)" />
-                        </div>
-                        <!--Comentarios-->
-                        <div class="form-group">
-                            <label for="comentarios">Comentarios Adicionales (opcional):</label>
-                            <textarea class="form-control"  aria-label="Small" id="comentarios" name="comentarios"  placeholder="Comentarios Adicionales del Producto"></textarea>
-                        </div>
-
-                        <p></p>
-                        <input type="submit" value="Guardar" />
-                    </form>
-                    
+                    </div>
                 </div>
                 
             </div>
-            
-            
-            
-            
+            <br>
         </article>
     </div>
 </body>
