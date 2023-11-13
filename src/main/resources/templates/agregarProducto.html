@@ -19,19 +19,25 @@
                 <div class="col-md-5 mx-auto my-2">
                     <div class="card border-secundary">
                         <div class="card-body">
-                            <form th:action="@{/guardar}" method="POST">
+                            <form th:action="@{/guardar}" method="POST" th:object="${inventario}">
                                 <!--Nombre del producto-->
                                 <div class="form-group">
                                     <label for="nombre">Nombre del producto</label>
-                                    <input type="text" class="form-control"  aria-label="Small" placeholder="Nombre del producto" id="nombre" name="nombre"/>
-                                    <div class="text-danger">
-                                    </div>
+                                    <input
+                                        type="text" 
+                                        class="form-control"  
+                                        aria-label="Small" 
+                                        placeholder="Nombre del producto" 
+                                        id="nombre" 
+                                        name="nombre"
+                                        th:value="${inventario.nombre}">
+                                    <span class="text-danger" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}">Name Error</span>
                                 </div>
                             
                                 <!--Tipo de producto-->
                                 <div class="form-group">
-                                    <label for="productType">Tipo de Producto:</label>
-                                        <select id="productType" class="form-control" name="productType" required >
+                                    <label for="tipoProducto">Tipo de Producto:</label>
+                                        <select id="tipoProducto" class="form-control" name="tipoProducto" required >
                                             <option value="Perecedero">Perecedero</option>
                                             <option value="Empacar">para empacar</option>
                                         </select> 
@@ -41,25 +47,39 @@
                                 <!-- Fecha de caducidad -->
                                 <div class="form-group">
                                     <label for="expiracion">Fecha de Caducidad:</label>
-                                    <input type="date" class="form-control " id="expiracion" name="expiracion"/>
-                                    <div class="text-danger">
-                                    </div>
+                                    <input
+                                        type="date" 
+                                        class="form-control " 
+                                        id="expiracion" 
+                                        name="expiracion"
+                                        th:value="${inventario.expiracion}">
+                                    <span class="text-danger" th:if="${#fields.hasErrors('expiracion')}" th:errors="*{expiracion}">Name Error</span>
                                 </div>
                                 <!-- Fecha -->
                                 <div class="form-group">
                                     <label for="adquisicion">Fecha de Adquisicion:</label>
-                                    <input type="date" class="form-control" id="adquisicion" name="adquisicion" required />
-                                    <div class="text-danger">
-                                    
-                                    </div>
+                                    <input
+                                        type="date" 
+                                        class="form-control" 
+                                        id="adquisicion" 
+                                        name="adquisicion"
+                                        th:value="${inventario.adquisicion}"
+                                        required>
+                                    <span class="text-danger" th:if="${#fields.hasErrors('adquisicion')}" th:errors="*{adquisicion}">Name Error</span>
                                 </div>
                             
                                 <!--Cantidad en existencia-->
                                 <div class="form-group">
                                     <label for="cantidad">Cantidad en existencia</label>
-                                    <input type="number" class="form-control"  aria-label="Small" name="cantidad" id="cantidad"  placeholder="Stock Existente"/>
-                                    <div class="text-danger">
-                                    </div>
+                                    <input
+                                        type="number" 
+                                        class="form-control"  
+                                        aria-label="Small" 
+                                        name="cantidad" 
+                                        id="cantidad"  
+                                        placeholder="Stock Existente" 
+                                        th:value="${inventario.cantidad}">
+                                    <span class="text-danger" th:if="${#fields.hasErrors('cantidad')}" th:errors="*{cantidad}">Name Error</span>
                                 </div>
                                 <!--Medida-->
                                 <div class="form-group">
@@ -78,32 +98,50 @@
                                 <!--Precio-->
                                 <div class="form-group">
                                     <label for="precio">Precio</label>
-                                    <input type="number" id="precio" name="precio" class="form-control"  aria-label="Small" placeholder="Precio del Producto">
-                                    <div class="text-danger">
-                                    
-                                    </div>
+                                    <input
+                                        type="number" 
+                                        id="precio" 
+                                        name="precio" 
+                                        class="form-control"  
+                                        aria-label="Small" 
+                                        placeholder="Precio del Producto" 
+                                        th:value="${inventario.precio}">
+                                    <span class="text-danger" th:if="${#fields.hasErrors('precio')}" th:errors="*{precio}">Name Error</span>
                                 </div>
                                 <!--Nombre del provedor-->
                                 <div class="form-group">
-                                    <label for="Pnombre">Nombre del Proveedor:</label>
-                                    <input type="text" class="form-control"  aria-label="Small" id="Pnombre" name="Pnombre" placeholder="Proveedor del Producto" >
-                                    <div class="text-danger">
-                                    
-                                    </div>
+                                    <label for="Proveedor">Nombre del Proveedor:</label>
+                                    <input
+                                        type="text" 
+                                        class="form-control"  
+                                        aria-label="Small" 
+                                        id="Proveedor" 
+                                        name="Proveedor" 
+                                        placeholder="Proveedor del Producto" 
+                                        th:value="${inventario.Proveedor}">
+                                    <span class="text-danger" th:if="${#fields.hasErrors('Proveedor')}" th:errors="*{Proveedor}">Name Error</span>
                                 </div>
                                 <!--Descripcion -->
                                 <div class="form-group">
                                     <label for="descripcion">Descripción del Producto (breve y opcional):</label>
-                                    <input class="form-control"  aria-label="Small" type="text" name="descripcion" id="descripcion"  placeholder="Descripción breve del Producto(opcional)" />
+                                    <input
+                                        class="form-control"  
+                                        aria-label="Small" 
+                                        type="text" 
+                                        name="descripcion" 
+                                        id="descripcion"  
+                                        placeholder="Descripción breve del Producto(opcional)"
+                                        th:value="${inventario.Proveedor}">
+                                    <span class="text-danger" th:if="${#fields.hasErrors('descripcion')}" th:errors="*{descripcion}">Name Error</span>
                                 </div>
                                 <!--Comentarios-->
                                 <div class="form-group">
                                     <label for="comentarios">Comentarios Adicionales (opcional):</label>
-                                    <textarea class="form-control"  aria-label="Small" id="comentarios" name="comentarios"  placeholder="Comentarios Adicionales del Producto"></textarea>
+                                    <textarea class="form-control"  aria-label="Small" id="comentarios" name="comentarios"  placeholder="Comentarios Adicionales del Producto" th:value="${inventario.comentarios}"></textarea>
                                 </div>
                             
                                 <p></p>
-                                <input type="submit" value="Guardar" />
+                                <input type="submit" value="Guardar" >
                             </form>
                         </div>
                     </div>

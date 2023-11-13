@@ -47,7 +47,6 @@ public class Inventario{
 	@ManyToOne
     @JoinColumn(name = "tipoProducto", referencedColumnName = "idTipoProducto")
     private TipoProducto tipoProducto;
-    //private String productType;
 	
 	@NotNull(message="La fecha de adquisicion es requerida")
     @Column(name="adquisicion")
@@ -86,8 +85,8 @@ public class Inventario{
 	@Column(name="comentarios")
 	private String comentarios;
 	
-	/* Provedor del prodcuto. */
-	@Column(name="provedor")
-    private String Provedor;
+	/* Proveedor del prodcuto. */
+	@Column(name="proveedor")
+    private String Proveedor;
 
 }

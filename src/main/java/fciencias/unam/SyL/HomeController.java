@@ -9,6 +9,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import jakarta.validation.Valid;
+import org.springframework.validation.BindingResult;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import fciencias.unam.SyL.entity.Inventario;
 import fciencias.unam.SyL.repository.InventarioRepository;
@@ -16,6 +21,13 @@ import fciencias.unam.SyL.repository.InventarioRepository;
 public class HomeController {
     @Autowired
     private InventarioService service;
+    private final Logger logger = LogManager.getLogger(HomeController.class);
+    
+    @ModelAttribute
+    public void init(Model model) {
+        Inventario inventario = new Inventario();
+        model.addAttribute("inventario", inventario);
+    }
 
     @GetMapping("/AgregarProducto")
     public String agregarP(){
@@ -43,12 +55,25 @@ public class HomeController {
     }
 
    @PostMapping("/guardar")
-    public String save(@ModelAttribute Inventario inventario){
-       service.saveInventario(inventario);
+    public String save(@Valid @ModelAttribute Inventario inventario, BindingResult result) {
+       if (result.hasErrors()) {
+            logger.info("HAY ERRORES! ");
+            logger.info(result.getAllErrors());
+            return "agregarProducto";
+
+        }
+        
+        logger.info("*** SAVE Inventario - Controller");
+        logger.debug("*********** ATRIBUTOS RECIBIDOS: ");
+        service.saveInventario(inventario);
     //    InventarioRepository.flush();
 
     //    this.mailSendr.sendSimpleMessage("ingrediente agregado");
        return "redirect:/inventario";
     }
     
+    // @GetMapping("/restStatic")
+    // public String restStatic(Model model) {
+    //     return "restStatic";
+    // }
 }
