@@ -37,18 +37,18 @@
                             </tr>
                         </thead>
                         <tbody>
-                     <!--       <tr th:each="Inventario:$(inventario)">
-                                <td th:text="${Inventario.idIngrediente}"></td>
-                                <td th:text="${Inventario.productType}"></td>
-                                <td th:text="${Inventario.expiracion"></td>
-                                <td th:text="${Inventario.adquisicion}"></td>
-                                <td th:text="${Inventario.cantidad}"></td>
-                                <td th:text="${Inventario.medida}"></td>
-                                <td th:text="${Inventario.precio}"></td>
-                                <td th:text="${Inventario.Pnombre}"></td>
-                                <td th:text="${Inventario.descripcion}"></td>
-                                <td th:text="${Inventario.comentarios}"></td>
-                            </tr>-->
+                           <tr th:each="Inventario:${inventario}">
+                                <td th:text="${Inventario.idIngrediente}">1</td>
+                                <td th:text="${Inventario.tipoProducto}">1</td>
+                                <td th:text="${Inventario.expiracion}">1</td>
+                                <td th:text="${Inventario.adquisicion}">1</td>
+                                <td th:text="${Inventario.cantidad}">1</td>
+                                <td th:text="${Inventario.medida}">1</td>
+                                <td th:text="${Inventario.precio}">1</td>
+                                <td th:text="${Inventario.nombre}">1</td>
+                                <td th:text="${Inventario.descripcion}">1</td>
+                                <td th:text="${Inventario.comentarios}">1</td>
+                            </tr>
                             
                         </tbody>
                     </table> 
