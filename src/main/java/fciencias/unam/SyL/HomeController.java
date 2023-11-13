@@ -27,6 +27,21 @@ public class HomeController {
         return "inventario";
     }
 
+    @GetMapping("/menu")
+    public String menu() {
+        return "menu";
+    }
+
+    @GetMapping("/tinga")
+    public String tinga() {
+        return "receta1";
+    }
+
+    @GetMapping("/lasana")
+    public String lasana() {
+        return "receta2";
+    }
+
    @PostMapping("/guardar")
     public String save(@ModelAttribute Inventario inventario){
        service.saveInventario(inventario);

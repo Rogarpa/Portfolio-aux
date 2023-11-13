@@ -1,0 +1,133 @@
+<!doctype html>
+<html   
+lang="es"
+xmlns:th="http://www.thymeleaf.org"
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+layout:decorate="~{layout}"
+
+>
+<head>
+    <title >Lasaña</title>
+    <link rel="stylesheet" type="text/css" href="resources/css/Receta2.css">
+</head>
+    <body>
+        <div layout:fragment="main-header">
+            <br>
+            <h1 class="mt-5"><strong>Lasaña</strong> </h1>
+        </div>
+        <div layout:fragment="main-content">
+            <article>
+            
+                <div class=" mt-11 text-center y" id="imgResumen">
+                    
+                    <div class="row">
+                        
+                        <div class="col-md-6">
+                            <div class="text-center">
+                                <img  src="img/240613.jpg" alt="Lasaña a la boloñesa" class="img-fluid rounded">
+                            </div>
+                        </div>
+                    
+                        <div class="col-md-5 mx-auto">
+                            <div class="text-lg-start">
+                            <p>Personas para las que alcanza:</p>
+                            <p class="text-secondary">Doce personas</p>
+                            <p>Tiempo de preparación: </p>
+                            <p class="text-secondary">50 minutos.</p>
+                            <p>Dificultad:</p>
+                            <p class="text-secondary">Fácil de hacer</p>
+                            <p>Tipo de presupuesto:</p>
+                            <p class="text-secondary">Económica</p>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            
+            <div class="row ">
+                <div class="col-md-5">
+                    <br>
+                    <p>Esta lasaña fácil y económica te rendirá muchísimo más que la tradicional, así que es perfecta para reuniones con invitados. ¡Además es riquísima!</p>
+                </div>
+                <div class="col-md-5">
+                    <br>
+                    <p>Puedes combinar el queso mozzarella con un poco de queso parmesano para lograr una costra de queso más crujiente y doradita.</p>    
+                </div>
+            </div>
+            <hr>
+            <div class="row justify-content-center">
+                <div class="col-md-4">
+                    <div class="recipe">
+                        <div class="ingredients" id="ingredientes">
+                        <h2>Ingredientes</h2>
+                        <h3>Para la salsa</h3>
+                        <ul>
+                            <li>1 ½ kilogramo de jitomate cortados en cuartos</li>
+                            <li>1 cebolla cortada en trozos</li>
+                            <li>2 cucharadas de aceite de oliva</li>
+                            <li>2 dientes de ajo finamente picados</li>
+                            <li>1 cubo de 10.5 gramos de Knorr® Tomate</li>
+                            <li>5 hojas de albahaca fresca</li>
+                            <li>1 cucharada de orégano seco</li>
+                        </ul>
+                        <h3>Para la boloñesa</h3>
+                        <ul>
+                            <li>1 sobre (70 gramos) de Rinde Más De Knorr®</li>
+                            <li>¾ de taza de agua</li>
+                            <li>500 gramos de carne molida de res</li>
+                            <li>2 cucharadas de aceite de oliva</li>
+                            <li>½ cebolla finamente picada</li>
+                            <li>1 diente de ajo finamente picado</li>
+                            <li>1 pimiento morrón rojo finamente picado</li>
+                            <li>½ cucharadita de pimienta negra quebrada</li>
+                            <li>½ cucharadita de canela molida</li>
+                        </ul>
+                        <h3>Para la lasaña</h3>
+                        <ul>
+                            <li>16 láminas de pasta para lasagna precocida</li>
+                            <li>200 gramos de queso mozzarella rallado</li>
+                        </ul>
+                    </div>
+                    </div>
+                </div>
+                <div class="col-md-1"></div>
+                <div class="col-md-7 ">
+                    <div id="preparacion" class="recipe">
+                        <h2>Método de preparación</h2>
+                        <h3>Para la salsa</h3>
+                        <ol>
+                            <li>En una olla con agua hirviendo, cocina los jitomates y la cebolla durante 10 minutos.</li>
+                            <li>Licúa con la menor cantidad posible de agua; luego cuela.</li>
+                            <li>En otra olla o sartén, calienta el aceite y sofríe el ajo durante un minuto. Luego agrega el jitomate licuado y los cubos de Knorr® Tomate, la albahaca y el orégano.</li>
+                            <li>Cocina la salsa durante 10 minutos moviendo de vez en vez.</li>                                                  
+                            <!-- Agrega más pasos de preparación según sea necesario -->
+                        </ol>
+                        <h3>Para la boloñesa</h3>
+                        <ol>
+                            <li>Mezcla el contenido del sobre Rinde Más de Knorr® con el agua y deja reposar durante 5 minutos.</li>
+                            <li>Añade a la carne molida y mezcla con las manos hasta que se haya incorporado perfectamente.</li>
+                            <li>Calienta 2 cucharadas de aceite en una sartén y sofríe la cebolla junto con el ajo y el pimiento.</li>
+                            <li>Cuando estén suaves, agrega la carne y cocina durante 10 minutos o hasta que esté cocida. Mueve constantemente.</li>                                                  
+                            <li>Sazona con pimienta y canela.</li>
+                            <li>Vierte la salsa de jitomate e integra perfectamente.</li>
+                            <!-- Agrega más pasos de preparación según sea necesario -->
+                        </ol>
+                        <h3>Para la lasaña</h3>
+                        <ol>
+                            <li>Precalienta el horno a 180ºC.  En un molde refractario previamente engrasado, coloca un poco de la boloñesa; luego cubre con una capa de láminas de pasta y otra capa de boloñesa de nuevo. Repite el proceso hasta que se llene el molde. Procura terminar con una capa de boloñesa.</li>
+                            <li>Espolvorea el queso rallado encima. Cubre la lasaña con papel aluminio y hornea a 180ºC durante 20-30 minutos. Después, retira el papel aluminio y hornea durante 10 minutos más o hasta que el queso dore un poquito. ¡Listo! Sirve inmediatamente y disfruta.</li>
+                        </ol>
+                    </div>
+                </div>                
+            </div>
+            <div class="row">
+                    <h4>Referencias</h4>
+                    <ol>
+                        <li>Lasaña fácil y económica. (s. f.). Recepedia.com. Recuperado 19 de septiembre de 2023, de <a href="https://www.recepedia.com/es-mx/receta/pasta/240613-lasana-facil-y-economica/">https://www.recepedia.com/es-mx/receta/pasta/240613-lasana-facil-y-economica/</a></li>
+                    </ol>
+            </div>
+        </article>
+        </div>
+        
+    </body>
+</html>
