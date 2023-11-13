@@ -1,0 +1,131 @@
+<!doctype html>
+<html   
+        lang="es"
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}"
+
+>
+<head>
+    <title>Menú</title>   
+</head>
+    <body>
+        <div layout:fragment="main-header">
+            <br>
+            <h1 class="mt-5"><strong>Menú</strong></h1>
+        </div>
+        <div layout:fragment="main-content">
+            <article>
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="card" style="width: 16rem; height: 25rem;">
+                            <img class="card-img-top" th:src="@{img/tinguita.jpg}" alt="Imagen de tingaa">
+                            <div class="card-body">
+                                <h5 class="card-title">Tinga</h5>
+                                <p class="card-text">Esta receta es fácil, rápida, económica y llenadora, ¡ideal para cocinar todos los días!</p>
+                                <p>Costo : $49.99 </p>
+                                <a th:href="@{tinga}" class="btn btn-dark">Receta</a>
+                                <a th:href="@{#}" class="btn btn-secondary">Editar</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card" style="width: 16rem; height: 25rem;">
+                            <img class="card-img-top" src="img/240613.jpg" alt="Imagen de lasaña">
+                            <div class="card-body">
+                                <h5 class="card-title">Lasaña</h5>
+                                <p class="card-text">Esta lasaña fácil y económica te rendirá muchísimo más que la tradicional!</p>
+                                <p>Costo : $79.99 </p>
+                                <a th:href="@{lasana}" class="btn btn-dark">Receta</a>
+                                <a href="#" class="btn btn-secondary">Editar</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card" style="width: 16rem; height: 25rem;">
+                            <img class="card-img-top" src="img/pozole.avif" alt="Imagen de pozole">
+                            <div class="card-body">
+                                <h5 class="card-title">Pozole rojo de pollo</h5>
+                                <p class="card-text">Receta de pozole de pollo es fácil, deliciosa, dale a tu mesa el auténtico sabor mexicano.</p>
+                                <p>Costo : $99.99 </p>
+                                <a href="https://www.recepedia.com/es-mx/receta/sopa/109135-pozole-rojo-de-pollo/" class="btn btn-dark">Receta</a>
+                                <a href="#" class="btn btn-secondary">Editar</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card" style="width: 16rem;  height: 25rem;">
+                            <img class="card-img-top" src="img/guacamole.avif" alt="Imagen de guacamole">
+                            <div class="card-body">
+                                <h5 class="card-title">Guacamole con habanero tatemado</h5>
+                                <p class="card-text">Perfecto y picosito guacamole con chile habanero.</p>
+                                <p>Costo : $39.99 </p>
+                                <a href="https://www.recepedia.com/es-mx/receta/sopa/109135-pozole-rojo-de-pollo/" class="btn btn-dark">Receta</a>
+                                <a href="#" class="btn btn-secondary">Editar</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <p></p>
+                    <p></p>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="card" style="width: 16rem; height: 25rem">
+                            <img class="card-img-top" src="img/bunuelos.avif" alt="Imagen de buñuelos">
+                            <div class="card-body">
+                                <h5 class="card-title">Buñuelos de chocolate</h5>
+                                <p class="card-text">Crujientes por fuera, suaves por dentro y con una deliciosa salsa de chocolate para acompañar.</p>
+                                <p>Costo : $29.99 </p>
+                                <a href="https://www.recepedia.com/es-mx/receta/postre/248881-bunuelos-de-chocolate/" class="btn btn-dark">Receta</a>
+                                <a href="#" class="btn btn-secondary">Editar</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card" style="width: 16rem; height: 25rem">
+                            <img class="card-img-top" src="img/flautas.avif" alt="Imagen de flautas">
+                            <div class="card-body">
+                                <h5 class="card-title">Flautas de papa con chorizo</h5>
+                                <p class="card-text">deliciosas flautas de papa con chorizo. ¡Pruébalas y verás!</p>
+                                <p>Costo : $25.99 </p>
+                                <a href="https://www.recepedia.com/es-mx/receta/carne/248706-flautas-de-papa-con-chorizo/" class="btn btn-dark">Receta</a>
+                                <a href="#" class="btn btn-secondary">Editar</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card" style="width: 16rem; height: 25rem;">
+                            <img class="card-img-top" src="img/masadapuerco.avif" alt="Imagen de asado de puerco">
+                            <div class="card-body">
+                                <h5 class="card-title">Asado de puerco</h5>
+                                <p class="card-text">Delicioso asado de puerco estilo norteño. Además, es nutritivo y muy lucidor.</p>
+                                <p>Costo : $39.99 </p>
+                                <a href="https://www.recepedia.com/es-mx/receta/carne/248670-asado-de-puerco/" class="btn btn-dark">Receta</a>
+                                <a href="#" class="btn btn-secondary">Editar</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card" style="width: 16rem; height: 25rem">
+                            <img class="card-img-top" src="img/tamales.avif" alt="Imagen de tamales">
+                            <div class="card-body">
+                                <h5 class="card-title">Tamales verdes</h5>
+                                <p class="card-text">Ricos y deliciosos tamales verdes para reunir a tu familia en la mesa. Los clásicos de Candelaria.</p>
+                                <p>Costo : $18.99 </p>
+                                <a href="https://www.recepedia.com/es-mx/receta/carne/107666-tamales-verdes/" class="btn btn-dark">Receta</a>
+                                <a href="#" class="btn btn-secondary">Editar</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <p></p>
+                <a th:href="@{#}" class="btn btn-dark">Agregar Receta</a>                
+                <p></p>
+                
+            </article>
+        </div>
+        
+    </body>
+</html>
