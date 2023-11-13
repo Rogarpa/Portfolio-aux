@@ -36,13 +36,18 @@
                             
                                 <!--Tipo de producto-->
                                 <div class="form-group">
-                                    <label for="tipoProducto">Tipo de Producto:</label>
+                                   <label for="tipoProducto">Tipo de Producto:</label>
                                         <select id="tipoProducto" class="form-control" name="tipoProducto" required >
+                                            <!--
                                             <option value="Perecedero">Perecedero</option>
-                                            <option value="Empacar">para empacar</option>
+                                            <option value="Empacar">para empacar</option>-->
+                                            <option value="">Selecciona un tipo de producto</option>
+									        <option th:each="tipoProducto : ${listaDeTiposDeProducto}"
+									                th:value="${tipoProducto.idTipoProducto}"
+									                th:text="${tipoProducto.tipo}">
+									        </option>
                                         </select> 
-                                    <div class="text-danger">
-                                    </div>
+                                    <span class="text-danger" th:if="${#fields.hasErrors('tipoProducto')}" th:errors="*{tipoProducto}">Tipo Producto Error</span>
                                 </div>
                                 <!-- Fecha de caducidad -->
                                 <div class="form-group">

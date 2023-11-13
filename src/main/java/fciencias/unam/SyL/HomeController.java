@@ -1,9 +1,15 @@
 package fciencias.unam.SyL;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import org.springframework.ui.Model;
-import org.springframework.stereotype.Controller;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,17 +22,28 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import fciencias.unam.SyL.entity.Inventario;
-import fciencias.unam.SyL.repository.InventarioRepository;
+import fciencias.unam.SyL.entity.TipoProducto;
+import fciencias.unam.SyL.service.InventarioService;
+import fciencias.unam.SyL.service.TipoProductoService;
+import jakarta.validation.Valid;
 @Controller
 public class HomeController {
+	
     @Autowired
     private InventarioService service;
+    
+    @Autowired
+    private TipoProductoService tipoProductoService;
+    
+
     private final Logger logger = LogManager.getLogger(HomeController.class);
     
     @ModelAttribute
     public void init(Model model) {
-        Inventario inventario = new Inventario();
+    	Inventario inventario = new Inventario();
         model.addAttribute("inventario", inventario);
+    	List<TipoProducto> listaDeTiposDeProducto = tipoProductoService.getTiposProducto();
+        model.addAttribute("listaDeTiposDeProducto", listaDeTiposDeProducto);
     }
 
     @GetMapping("/AgregarProducto")

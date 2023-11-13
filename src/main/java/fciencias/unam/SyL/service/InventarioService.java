@@ -1,12 +1,12 @@
-package fciencias.unam.SyL;
+package fciencias.unam.SyL.service;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import fciencias.unam.SyL.repository.InventarioRepository;
 import fciencias.unam.SyL.entity.Inventario;
+import fciencias.unam.SyL.repository.InventarioRepository;
 
-import java.util.List;
 @Service
 public class InventarioService {
 	@Autowired

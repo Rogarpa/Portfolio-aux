@@ -22,7 +22,7 @@ import lombok.Setter;
  * Clase para representar un INVENTARIO de SyL.
  */
 @Entity
-@Table(name="tipoProducto")
+@Table(name="tipo_producto")
 public class TipoProducto{
     
 	@Id
@@ -33,9 +33,4 @@ public class TipoProducto{
 	@Column(name="tipo")
 	@NotNull(message="El tipo es requerido")
     private String tipo;
-    
-	//@Column(name="medida")
-	//@NotNull(message="La medida es requerida")
-    //private String medida;
-    
 }

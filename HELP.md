@@ -25,6 +25,14 @@ ebc8ed7b2193   postgres:14-alpine   "docker-entrypoint.s…"   13 hours ago   Up
 - ESTO debe cambiarse por las instrucciones para postgrest, ME AYUDAN CON ESTO?
 	- Para conectarse a nuestro contenedor
 		- sudo docker exec -it syl-mysql-1 bash
+- to postgrest:
+	- psql -h localhost -U main -d SyL -p 32123
+	- \l 
+	- \c SyL
+	- \dt
+	\d+ nombre_de_tabla
+	
+- toMysql:
 	- mysql -u root -p
 		- entrar como root
 	- show databases;
