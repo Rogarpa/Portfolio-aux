@@ -11,21 +11,23 @@ import org.springframework.web.bind.annotation.RestController;
 @Controller
 public class Model {
 
-    @GetMapping("/Ejemplo")
-    public String ejemploP(){
-        return "ejemplo";
-    }
 
-    @GetMapping("/AP")
+    @GetMapping("/AgregarProducto")
     public String agregarP(){
         return "agregarProducto";
     }
-//falta el repositorio de producto y 
-    //@PostMapping("/guardar")
-    //public String save(@ModelAttribute Producto producto){
-       // productoRepository.save(producto);
-        //productoRepository.flush();
-        //return "redirect:/AP"
-        //}
+    @GetMapping("/inventario")
+    public String inventarios() {
+        return "inventario";
+    }
+
+   //@PostMapping("/guardar")
+    //public String save(@ModelAttribute Inventario inventario){
+    //    InventarioRepository.save(inventario);
+    //    InventarioRepository.flush();
+//
+    //    this.mailSendr.sendSimpleMessage("ingrediente agregado");
+    //    return "redirect:/inventario"
+    //}
     
 }
