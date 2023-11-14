@@ -29,12 +29,14 @@
                                 <th>Nombre del Proveedor</th>
                                 <th>Descripción del Producto</th>
                                 <th>Comentarios Adicionales</th>
+                                <th></th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
                            <tr th:each="Inventario:${inventario}">
                                 <td th:text="${Inventario.nombre}"></td>
-                                <td th:text="${Inventario.tipoProducto.tipo}"></td>
+                                <!-- <td th:text="${Inventario.tipoProducto.tipo}"></td> -->
                                 <td th:text="${Inventario.expiracion}"></td>
                                 <td th:text="${Inventario.adquisicion}"></td>
                                 <td th:text="${Inventario.cantidad}"></td>
@@ -43,6 +45,10 @@
                                 <td th:text="${Inventario.Proveedor}"></td>
                                 <td th:text="${Inventario.descripcion}"></td>
                                 <td th:text="${Inventario.comentarios}"></td>
+                                <td>
+                                    <a th:href="@{/editar/{id}(id=${Inventario.idIngrediente})}" class="btn btn-success">Editar</a>
+                               <a th:href="@{/eliminar/{id}(id=${Inventario.idIngrediente})}" class="btn btn-danger">Eliminar</a>
+                                </td>
                             </tr>
                             
                         </tbody>

@@ -44,9 +44,10 @@ public class Inventario{
 	private String nombre;
 	
 	/* Tipo del producto.*/
-	@ManyToOne
-    @JoinColumn(name = "tipoProducto", referencedColumnName = "idTipoProducto")
-    private TipoProducto tipoProducto;
+	// @ManyToOne
+    @JoinColumn(name = "tipoProducto")
+	// , referencedColumnName = "idTipoProducto"
+    private String tipoProducto;
 	
 	@NotNull(message="La fecha de adquisicion es requerida")
     @Column(name="adquisicion")
