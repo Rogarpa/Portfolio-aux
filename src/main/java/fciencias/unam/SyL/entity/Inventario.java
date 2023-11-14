@@ -1,10 +1,6 @@
 package fciencias.unam.SyL.entity;
 
-import java.util.Date;
-import java.util.List;
-
-import org.springframework.format.annotation.DateTimeFormat;
-
+import fciencias.unam.SyL.constraint.DateRangeConstraint;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -13,6 +9,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.GroupSequence;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -21,15 +19,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Clase que nos permite representar un INVENTARIO de SyL,
+ * es decir una lista de productos o ingredientes.
+ */
 @Data
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-/**
- * Clase que nos permite representar un INVENTARIO de SyL,
- * es decir una lista de productos o ingredientes.
- */
+@GroupSequence({DateRange.class, Inventario.class})
 @Entity
 @Table(name="inventario")
 public class Inventario{
@@ -48,17 +47,11 @@ public class Inventario{
     @JoinColumn(name = "tipoProducto", referencedColumnName = "idTipoProducto")
     private TipoProducto tipoProducto;
 	
-	@NotNull(message="La fecha de adquisicion es requerida")
-    @Column(name="adquisicion")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date adquisicion;
-    
-	@NotNull(message="La fecha de expiracion es requerida")
-    @Column(name="expiracion")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date expiracion;
+	@DateRangeConstraint
+    @Valid
+    private DateRange periodo;
 	
-	/* Cantidad del prodcuto. */
+	/* Cantidad del producto. */
 	@Column(name="cantidad")
 	@NotNull(message="La cantidad es requerido")
 	@Min(value=0, message="La cantidad debe de ser positivo")
@@ -88,5 +81,10 @@ public class Inventario{
 	/* Proveedor del prodcuto. */
 	@Column(name="proveedor")
     private String Proveedor;
+
+	public void setPeriodo(DateRange dateRange) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

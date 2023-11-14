@@ -1,8 +1,6 @@
 package fciencias.unam.SyL;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,14 +11,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import jakarta.validation.Valid;
-import org.springframework.validation.BindingResult;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
+import fciencias.unam.SyL.entity.DateRange;
 import fciencias.unam.SyL.entity.Inventario;
 import fciencias.unam.SyL.entity.TipoProducto;
 import fciencias.unam.SyL.service.InventarioService;
@@ -35,12 +27,12 @@ public class HomeController {
     @Autowired
     private TipoProductoService tipoProductoService;
     
-
     private final Logger logger = LogManager.getLogger(HomeController.class);
     
     @ModelAttribute
     public void init(Model model) {
     	Inventario inventario = new Inventario();
+    	inventario.setPeriodo(new DateRange());
         model.addAttribute("inventario", inventario);
     	List<TipoProducto> listaDeTiposDeProducto = tipoProductoService.getTiposProducto();
         model.addAttribute("listaDeTiposDeProducto", listaDeTiposDeProducto);
@@ -77,9 +69,7 @@ public class HomeController {
             logger.info("HAY ERRORES! ");
             logger.info(result.getAllErrors());
             return "agregarProducto";
-
         }
-        
         logger.info("*** SAVE Inventario - Controller");
         logger.debug("*********** ATRIBUTOS RECIBIDOS: ");
         service.saveInventario(inventario);
