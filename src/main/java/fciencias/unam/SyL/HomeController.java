@@ -44,8 +44,9 @@ public class HomeController {
     }
     @GetMapping("/inventario")
     public String inventarios(Model model) {
+    	// esto podría generar un error profe?
         model.addAttribute("inventario", service.getInventarios());
-        return "inventario";
+        return "inventario"; 
     }
 
     @GetMapping("/menu")
@@ -68,10 +69,18 @@ public class HomeController {
        if (result.hasErrors()) {
             logger.info("HAY ERRORES! ");
             logger.info(result.getAllErrors());
-            return "agregarProducto";
+            return "agregarProducto"; 
+            // con esto obtenia como error
+            //Exception processing template "inventario": An error happened during template parsing (template: "class path resource [templates/inventario.html]")
+            //org.thymeleaf.exceptions.TemplateInputException: An error happened during template parsing (template: "class path resource [templates/inventario.html]")
+
+            //return "redirect:/agregarProducto";
         }
-        logger.info("*** SAVE Inventario - Controller");
         logger.debug("*********** ATRIBUTOS RECIBIDOS: ");
+        logger.debug(inventario.getNombre());
+        logger.debug(inventario.getPeriodo().getAdquisicion());
+        logger.debug(inventario.getPeriodo().getExpiracion());
+        logger.info("*** SAVE Inventario - Controller");
         service.saveInventario(inventario);
     //    InventarioRepository.flush();
 

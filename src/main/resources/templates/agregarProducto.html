@@ -29,10 +29,10 @@
                                         aria-label="Small" 
                                         placeholder="Nombre del producto" 
                                         id="nombre" 
-                                        name="nombre"
+                                        name="nombre"                                        
                                         th:field="*{nombre}"
-                                        th:value="${inventario.nombre}"
                                         required>
+                                        <!-- th:value="${inventario.nombre}" -->
                                     <span class="text-danger" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}">Name Error</span>
                                 </div>
                             
@@ -48,31 +48,36 @@
 									                th:value="${tipoProducto.idTipoProducto}"
 									                th:text="${tipoProducto.tipo}">
 									        </option>
+									        <!--th:selected="${tipoSemestre.clave == semestre.tipo?.clave}"-->
                                         </select> 
                                     <span class="text-danger" th:if="${#fields.hasErrors('tipoProducto')}" th:errors="*{tipoProducto}">Tipo Producto Error</span>
                                 </div>
-                                <!-- Fecha de caducidad -->
-                                <div class="form-group" th:object="${inventario.periodo}">
-                                    <label for="expiracion">Fecha de Caducidad:</label>
-                                    <input
-                                        type="date" class="form-control" id="expiracion" 
-                                        name="expiracion"
-                                        th:value="${inventario.periodo.expiracion}">
-                                    <span class="text-danger" th:if="${#fields.hasErrors('expiracion')}" th:errors="*{expiracion}">Name Error</span>
-                                </div>
-                                <!-- Fecha -->
-                                <div class="form-group">
-                                    <label for="adquisicion">Fecha de Adquisicion:</label>
-                                    <input
-                                        type="date" 
-                                        class="form-control" 
-                                        id="adquisicion" 
-                                        name="adquisicion"
-                                        th:value="${inventario.periodo.adquisicion}"
-                                        required>
-                                    <span class="text-danger" th:if="${#fields.hasErrors('adquisicion')}" th:errors="*{adquisicion}">Name Error</span>
-                                     <span class="text-danger row" th:if="${#fields.hasGlobalErrors()}" th:errors="${inventario.periodo}">Name Error</span>
-                                </div>
+                                <div class="row" th:object="${inventario.periodo}">
+	                                <!-- Fecha 
+	                                th:value="${inventario.periodo.adquisicion}"
+	                                -->
+	                                <div class="form-group">
+	                                    <label for="adquisicion">Fecha de Adquisicion:</label>
+	                                    <input
+	                                        type="date" 
+	                                        class="form-control" 
+	                                        id="adquisicion" 
+	                                        name="adquisicion"
+	                                        required th:field="*{adquisicion}">
+	                                    <span class="text-danger" th:if="${#fields.hasErrors('adquisicion')}" th:errors="*{adquisicion}">Name Error</span>
+	                                     <span class="text-danger row" th:if="${#fields.hasGlobalErrors()}" th:errors="${inventario.periodo}">Name Error</span>
+	                                </div>
+	                                
+	                                <!-- Fecha de caducidad FALTARÍA OTRO DIV? -->
+	                                <div class="form-group">
+	                                    <label for="expiracion">Fecha de Caducidad:</label>
+	                                    <input
+	                                        type="date" class="form-control" id="expiracion" name="expiracion"
+	                                        th:field="*{expiracion}">
+	                                    <span class="text-danger" th:if="${#fields.hasErrors('expiracion')}" th:errors="*{expiracion}">Name Error</span>
+	                                </div>
+	                                <!-- th:value="${inventario.periodo.expiracion}"  -->
+	                           </div>
                             
                                 <!--Cantidad en existencia-->
                                 <div class="form-group">

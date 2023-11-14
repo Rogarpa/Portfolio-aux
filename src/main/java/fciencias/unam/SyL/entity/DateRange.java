@@ -27,4 +27,20 @@ public class DateRange {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate expiracion;
 
+	public LocalDate getAdquisicion() {
+		return adquisicion;
+	}
+
+	public void setAdquisicion(LocalDate adquisicion) {
+		this.adquisicion = adquisicion;
+	}
+
+	public LocalDate getExpiracion() {
+		return expiracion;
+	}
+
+	public void setExpiracion(LocalDate expiracion) {
+		this.expiracion = expiracion;
+	}
+
 }

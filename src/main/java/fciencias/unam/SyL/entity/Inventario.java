@@ -42,6 +42,14 @@ public class Inventario{
 	@NotNull(message="El nombre es requerido")
 	private String nombre;
 	
+	public String getNombre() {
+		return nombre;
+	}
+
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+
 	/* Tipo del producto.*/
 	@ManyToOne
     @JoinColumn(name = "tipoProducto", referencedColumnName = "idTipoProducto")
@@ -51,6 +59,14 @@ public class Inventario{
     @Valid
     private DateRange periodo;
 	
+	public DateRange getPeriodo() {
+		return periodo;
+	}
+
+	public void setPeriodo(DateRange periodo) {
+		this.periodo = periodo;
+	}
+
 	/* Cantidad del producto. */
 	@Column(name="cantidad")
 	@NotNull(message="La cantidad es requerido")
@@ -82,9 +98,5 @@ public class Inventario{
 	@Column(name="proveedor")
     private String Proveedor;
 
-	public void setPeriodo(DateRange dateRange) {
-		// TODO Auto-generated method stub
-		
-	}
 
 }
