@@ -128,9 +128,9 @@ public class HomeController {
         
         if (inventarioAEditar != null) {
             model.addAttribute("inventario", inventarioAEditar);
-            // List<TipoProducto> listaDeTiposDeProducto = tipoProductoService.getTiposProducto();
-            // model.addAttribute("listaDeTiposDeProducto", listaDeTiposDeProducto);
-            // model.addAttribute("tipoProducto", inventarioAEditar.getTipoProducto());
+            List<TipoProducto> listaDeTiposDeProducto = tipoProductoService.getTiposProducto();
+            model.addAttribute("listaDeTiposDeProducto", listaDeTiposDeProducto);
+            model.addAttribute("tipoProducto", inventarioAEditar.getTipoProducto());
             return "editarProducto"; 
         }
         return "redirect:/inventario"; // redirige a una página de error
