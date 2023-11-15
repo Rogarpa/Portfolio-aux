@@ -69,12 +69,7 @@ public class HomeController {
        if (result.hasErrors()) {
             logger.info("HAY ERRORES! ");
             logger.info(result.getAllErrors());
-            return "agregarProducto"; 
-            // con esto obtenia como error
-            //Exception processing template "inventario": An error happened during template parsing (template: "class path resource [templates/inventario.html]")
-            //org.thymeleaf.exceptions.TemplateInputException: An error happened during template parsing (template: "class path resource [templates/inventario.html]")
-
-            //return "redirect:/agregarProducto";
+            return "agregarProducto";
         }
         logger.debug("*********** ATRIBUTOS RECIBIDOS: ");
         logger.debug(inventario.getNombre());
@@ -82,9 +77,6 @@ public class HomeController {
         logger.debug(inventario.getPeriodo().getExpiracion());
         logger.info("*** SAVE Inventario - Controller");
         service.saveInventario(inventario);
-    //    InventarioRepository.flush();
-
-    //    this.mailSendr.sendSimpleMessage("ingrediente agregado");
        return "redirect:/inventario";
     }
     

@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Embeddable
+@Embeddable // esta notacion nos permite que esto no sera una llave foranea, se agregaran como columnas en la otra tabla
 public class DateRange {
 	
 	@NotNull(message="La fecha de adquisicion es requerida")
