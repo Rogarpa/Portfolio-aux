@@ -35,8 +35,8 @@
                            <tr th:each="Inventario:${inventario}">
                                 <td th:text="${Inventario.nombre}"></td>
                                 <td th:text="${Inventario.tipoProducto.tipo}"></td>
-                                <td th:text="${Inventario.expiracion}"></td>
-                                <td th:text="${Inventario.adquisicion}"></td>
+                                <td th:text="${Inventario.periodo.expiracion}"></td>
+                                <td th:text="${Inventario.periodo.adquisicion}"></td>
                                 <td th:text="${Inventario.cantidad}"></td>
                                 <td th:text="${Inventario.medida}"></td>
                                 <td th:text="${Inventario.precio}"></td>
