@@ -5,13 +5,13 @@
         xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
         layout:decorate="~{layout}" >
 <head>
-    <title>Agregar Producto</title>
+    <title>Editar Producto</title>
     
 </head>
 <body>
     <div layout:fragment="main-header">
         <br>
-        <h1 class="mt-5 text-center"><strong>Agregar producto</strong></h1>
+        <h1 class="mt-5 text-center"><strong>Editar producto</strong></h1>
     </div>
     <div layout:fragment="main-content">
         <article>
@@ -19,8 +19,21 @@
                 <div class="col-md-5 mx-auto my-2">
                     <div class="card border-secundary">
                         <div class="card-body">
-                            <form th:action="@{/guardar}" method="POST" th:object="${inventario}">
+                            <form th:action="@{/guardarEdicion}" method="POST" th:object="${inventario}">
                                 <!--Nombre del producto-->
+
+                                <div class="form-group">
+                                    <label for="nombre">Nombre del producto</label>
+                                    <input
+                                        type="hidden" 
+                                        class="form-control"  
+                                        aria-label="Small" 
+                                        placeholder="Id de Ingrediente" 
+                                        id="idIngrediente" 
+                                        name="idIngrediente"
+                                        th:value="${inventario.idIngrediente}">
+                                </div>
+
                                 <div class="form-group">
                                     <label for="nombre">Nombre del producto</label>
                                     <input
@@ -29,73 +42,50 @@
                                         aria-label="Small" 
                                         placeholder="Nombre del producto" 
                                         id="nombre" 
-                                        name="nombre"                                        
-                                        th:field="*{nombre}"
-                                        required>
-                                        <!-- th:value="${inventario.nombre}" este es para llenar el valor con los datos precargados
-
-                                            html define un arbol, el padre es form
-                                            th:object nos define el objeto 
-                                            en el th:field es el atributo del objeto que esta arriba
-
-                                            field por detras crea ese name y ese objeto
-                                            con sencillos con field es suf
-                                            pero para algo mas complejo, como datos anidados, con 
-                                            poner los 2 esta bien
-                                        -->
+                                        name="nombre"
+                                        th:value="${inventario.nombre}">
                                     <span class="text-danger" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}">Name Error</span>
                                 </div>
                             
                                 <!--Tipo de producto-->
                                 <div class="form-group">
                                    <label for="tipoProducto">Tipo de Producto:</label>
-                                        <select id="tipoProducto" class="form-control" name="tipoProducto" 
-                                        required >
-                                            <!--
+                                        <select id="tipoProducto" class="form-control" name="tipoProducto" required >
+                                            
                                             <option value="Perecedero">Perecedero</option>
-                                            <option value="Empacar">para empacar</option>-->
+                                            <option value="Empacar">para empacar</option>
                                             <option value="">Selecciona un tipo de producto</option>
-									        <option th:each="tipoProducto : ${listaDeTiposDeProducto}"
+									        <!-- <option th:each="tipoProducto : ${listaDeTiposDeProducto}"
 									                th:value="${tipoProducto.idTipoProducto}"
 									                th:text="${tipoProducto.tipo}"
-                                                    th:selected="${tipoProducto.idTipoProducto == inventario.tipoProducto?.idTipoProducto}">
-                                                    <!-- acceder a un atributo 
-                                                        ?. si el lado izq solo dame un null, si no comparalos
-                                            -->
-									        </option>
-									        <!--th:selected="${tipoSemestre.clave == semestre.tipo?.clave}"
-                                               los select funcionan con un select pero no con value
-                                               th:field="*{tipoProducto}"
-                                            -->
+                                                    th:selected="${tipoProducto.idTipoProducto == tipoProducto.idTipoProducto}"> 
+									        </option> -->
                                         </select> 
                                     <span class="text-danger" th:if="${#fields.hasErrors('tipoProducto')}" th:errors="*{tipoProducto}">Tipo Producto Error</span>
                                 </div>
-                                <div class="row" th:object="${inventario.periodo}">
-	                                <!-- Fecha 
-	                                th:value="${inventario.periodo.adquisicion}"
-	                                -->
-	                                <div class="form-group">
-	                                    <label for="adquisicion">Fecha de Adquisicion:</label>
-	                                    <input
-	                                        type="date" 
-	                                        class="form-control" 
-	                                        id="adquisicion" 
-	                                        name="adquisicion"
-	                                        required th:field="*{adquisicion}">
-	                                    <span class="text-danger" th:if="${#fields.hasErrors('adquisicion')}" th:errors="*{adquisicion}">Name Error</span>
-	                                     <span class="text-danger row" th:if="${#fields.hasGlobalErrors()}" th:errors="${inventario.periodo}">Name Error</span>
-	                                </div>
-	                                
-	                                <!-- Fecha de caducidad FALTARÍA OTRO DIV? -->
-	                                <div class="form-group">
-	                                    <label for="expiracion">Fecha de Caducidad:</label>
-	                                    <input
-	                                        type="date" class="form-control" id="expiracion" name="expiracion"
-	                                        th:field="*{expiracion}">
-	                                    <span class="text-danger" th:if="${#fields.hasErrors('expiracion')}" th:errors="*{expiracion}">Name Error</span>
-	                                </div>
-	                                <!-- th:value="${inventario.periodo.expiracion}"  -->
-	                           </div>
+                                <!-- Fecha de caducidad -->
+                                <div class="form-group">
+                                    <label for="expiracion">Fecha de Caducidad:</label>
+                                    <input
+                                        type="date" 
+                                        class="form-control " 
+                                        id="expiracion" 
+                                        name="expiracion"
+                                        th:value="${#dates.format(inventario.periodo.expiracion, 'yyyy-MM-dd')}">
+                                    <span class="text-danger" th:if="${#fields.hasErrors('expiracion')}" th:errors="*{periodo.expiracion}">Name Error</span>
+                                </div>
+                                <!-- Fecha -->
+                                <div class="form-group">
+                                    <label for="adquisicion">Fecha de Adquisicion:</label>
+                                    <input
+                                        type="date" 
+                                        class="form-control" 
+                                        id="adquisicion" 
+                                        name="adquisicion"
+                                        th:value="${#dates.format(inventario.periodo.adquisicion, 'yyyy-MM-dd')}" 
+                                        required>
+                                    <span class="text-danger" th:if="${#fields.hasErrors('adquisicion')}" th:errors="*{periodo.adquisicion}">Name Error</span>
+                                </div>
                             
                                 <!--Cantidad en existencia-->
                                 <div class="form-group">
@@ -170,7 +160,8 @@
                                 </div>
                             
                                 <p></p>
-                                <input type="submit" value="Guardar" >
+                                <input type="submit" class="btn btn-success" value="Guardar cambios" >
+                                <a th:href="@{/inventario}" class="btn btn-danger">Cancelar</a>
                             </form>
                         </div>
                     </div>

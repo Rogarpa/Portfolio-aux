@@ -98,5 +98,4 @@ public class Inventario{
 	@Column(name="proveedor")
     private String Proveedor;
 
-
 }
