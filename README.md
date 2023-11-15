@@ -11,21 +11,30 @@ docker-compose up -d
 También se puede utilizar cualquier otro servidor que al que se tenga acceso, solo hay que
 actualizar los parámetros de conexión en el archivo application.properties.
 
-IMPORTANTE:
-Después de la primera ejecución, se debe considerar actualizar la configuración con:
-`spring.sql.init.mode=never` con el fin de no regenerar la base de datos, pero esto es hasta que ya tengamos la base bien definida, antes de ser poblada
+La creación de la base de datos es manejada por JPA, por lo que la creación de las tablas y vaciado es automático.  
 
 3. Ejecutar
 ```
 ./mvnw spring-boot:run
 ```
 
-## Dependecias ocupadas:
+## Dependecias usadas:
 
-// Agregadas en este commit(en el que se subio esto)
 - spring-boot-starter-data-jpa
 - spring-boot-starter-validation
 - mysql-connector-java
+- spring-boot-starter-parent
+- spring-boot-starter-thymeleaf
+- thymeleaf-layout-dialect
+- spring-boot-starter-web
+- spring-boot-devtools
+- spring-boot-starter-test
+- lombok
+- spring-boot-starter-data-jpa
+- postgresql
+- spring-boot-starter-validation
+- spring-boot-maven-plugin
+- maven-compiler-plugin
 
 
 ### Actualizar el Proyecto despues de agregar una nueva dependencia
