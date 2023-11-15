@@ -1,7 +1,8 @@
-package fciencias.unam.SyL;
+package fciencias.unam.SyL.controller;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,17 +23,16 @@ import fciencias.unam.SyL.service.TipoProductoService;
 import jakarta.validation.Valid;
 
 @Controller
-public class HomeController {
+@RequestMapping("/inventario")
+public class InventarioController {
 	
     @Autowired
     private InventarioService serviceInventario;
     
     @Autowired
     private TipoProductoService tipoProductoService;
-    
-    
 
-    private final Logger logger = LogManager.getLogger(HomeController.class);
+    private final Logger logger = LogManager.getLogger(InventarioController.class);
     
     @ModelAttribute
     public void init(Model model) {
@@ -45,27 +45,12 @@ public class HomeController {
 
     @GetMapping("/AgregarProducto")
     public String agregarP(){
-        return "agregarProducto";
+        return "inventario/agregarProducto";
     }
     @GetMapping("/inventario")
     public String inventarios(Model model) {
         model.addAttribute("inventario", serviceInventario.readAll());
-        return "inventario";
-    }
-
-    @GetMapping("/menu")
-    public String menu() {
-        return "menu";
-    }
-
-    @GetMapping("/tinga")
-    public String tinga() {
-        return "receta1";
-    }
-
-    @GetMapping("/lasana")
-    public String lasana() {
-        return "receta2";
+        return "inventario/inventario";
     }
 
    @PostMapping("/guardar")
@@ -73,52 +58,29 @@ public class HomeController {
        if (result.hasErrors()) {
             logger.info("HAY ERRORES! ");
             logger.info(result.getAllErrors());
-            return "agregarProducto";
+            return "inventario/agregarProducto";
 
         }
         
         logger.info("*** SAVE Inventario - Controller");
         
         serviceInventario.create(inventario);
-        return "redirect:/inventario";
-    }
-
-    // @PostMapping("/eliminar")
-    // public String delete(Inventario inventario) {
-    //     logger.info("*** DELETE Inventario - Controller");
-    //     serviceInventario.deleteByIdIngrediente(inventario);
-    //     return "redirect:/inventario";
-    // }
-
-    @PostMapping("/actualizar")
-    public String update(@Valid @ModelAttribute Inventario inventario) {
-        logger.info("*** UPDATE Inventario - Controller");
-        serviceInventario.update(inventario);
-        return "redirect:/inventario";
+        return "redirect:/inventario/inventario";
     }
 
     @PostMapping("/guardarEdicion")
-    public String saveEdit(@ModelAttribute Inventario inventario, BindingResult result) {
+    public String saveEdit(@Valid @ModelAttribute Inventario inventario, BindingResult result) {
         if (result.hasErrors()) {
             logger.info("HAY ERRORES! ");
             logger.info(result.getAllErrors());
-            return "editarProducto";
+            return "inventario/editarProducto";
 
         }else{
         logger.info("*** UPDATE Inventario - Controller");
         serviceInventario.update(inventario);
-        return "redirect:/inventario";
+        return "redirect:/inventario/inventario";
 
         }
-        // if (inventarioAEditar != null) {
-        //     model.addAttribute("inventario", inventarioAEditar);
-        //     List<TipoProducto> listaDeTiposDeProducto = tipoProductoService.getTiposProducto();
-        //     model.addAttribute("listaDeTiposDeProducto", listaDeTiposDeProducto);
-        //     model.addAttribute("tipoProducto", inventarioAEditar.getTipoProducto());
-        //     return "editarProducto"; 
-        // } else {
-        //     return "redirect:/inventario"; // redirige a una página de error
-        // }
     
     }
 
@@ -131,9 +93,9 @@ public class HomeController {
             List<TipoProducto> listaDeTiposDeProducto = tipoProductoService.getTiposProducto();
             model.addAttribute("listaDeTiposDeProducto", listaDeTiposDeProducto);
             model.addAttribute("tipoProducto", inventarioAEditar.getTipoProducto());
-            return "editarProducto"; 
+            return "inventario/editarProducto"; 
         }
-        return "redirect:/inventario"; // redirige a una página de error
+        return "redirect:/inventario/inventario"; 
         
     }
 
@@ -141,7 +103,7 @@ public class HomeController {
     public String delete(@PathVariable Long id) {
         logger.info("*** DELETE Inventario - Controller");
         serviceInventario.deleteByIdIngrediente(id);
-        return "redirect:/inventario";
+        return "redirect:/inventario/inventario";
     }
 
 }

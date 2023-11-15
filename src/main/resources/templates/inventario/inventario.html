@@ -46,8 +46,8 @@
                                 <td th:text="${Inventario.descripcion}"></td>
                                 <td th:text="${Inventario.comentarios}"></td>
                                 <td>
-                                    <a th:href="@{/editar/{id}(id=${Inventario.idIngrediente})}" class="btn btn-success">Editar</a>
-                               <a th:href="@{/eliminar/{id}(id=${Inventario.idIngrediente})}" class="btn btn-danger">Eliminar</a>
+                                    <a th:href="@{/inventario/editar/{id}(id=${Inventario.idIngrediente})}" class="btn btn-success">Editar</a>
+                               <a th:href="@{/inventario/eliminar/{id}(id=${Inventario.idIngrediente})}" class="btn btn-danger">Eliminar</a>
                                 </td>
                             </tr>
                             
