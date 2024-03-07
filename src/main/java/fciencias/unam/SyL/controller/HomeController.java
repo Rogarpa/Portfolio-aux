@@ -19,11 +19,11 @@ public class HomeController {
 
     @GetMapping("/tinga")
     public String tinga() {
-        return "receta1";
+        return "./receta/receta1";
     }
 
     @GetMapping("/lasana")
     public String lasana() {
-        return "receta2";
+        return "./receta/receta2";
     }
 }
