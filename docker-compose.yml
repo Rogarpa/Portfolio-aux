@@ -3,9 +3,19 @@ version: '3.9'
 services:
   postgres:
     image: postgres:14-alpine
-    ports:
-      - 32123:5432
     environment:
       - POSTGRES_PASSWORD=main
       - POSTGRES_USER=main
       - POSTGRES_DB=SyL
+  spring-server:
+    image: eclipse-temurin:17-jdk-focal
+    build: 
+      dockerfile: ./Dockerfile.spring-server
+    volumes:
+      - .:/app
+    ports:
+      - 8080:8080
+    depends_on:
+    - postgres
+    links:
+    - "postgres:database"
