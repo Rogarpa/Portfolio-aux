@@ -15,7 +15,6 @@
 
 (define-struct struct_main_no_functions (compound_statement) #:transparent)
 (define-struct struct_main_functions (compound_statement function_list) #:transparent)
-(define-struct struct_statement_list (single_statement statement_list) #:transparent)
 (define-struct struct_empty_statement () #:transparent)
 
 (define-struct struct_var_declaration (variable type) #:transparent)
@@ -248,15 +247,5 @@ sort(a:int []){
         i++
     }
 }
-"
-)
-(define b
-"
-//Comentario 1
-
-main{
-    int a, b, c
-}
-
 "
 )

@@ -26,30 +26,10 @@
                                                                 (list-syntax-tree function_list)
                                                                 "]")] 
     
-    ; [(struct_statement_list single_statement statement_list)
-    ;   (if (empty? statement_list)
-    ;     (syntax-tree single_statement)
-    ;     (string-append (syntax-tree single_statement)  "\n" (syntax-tree statement_list)))]
-    ; [(struct_empty_statement) ""]
     
     ; Variables manipulation
     [(struct_var_declaration variable type) (string-append "decl " (syntax-tree variable) " " (syntax-tree type) )]
     [(struct_multi_var_declaration type id_list)
-    ;  (if (empty? id_list)
-    ;      (string-append (syntax-tree type))
-        ; (string-append (syntax-tree type) " " (foldl (lambda (s1 s2) (string-append s2 s1)) "" (map (lambda (id) (syntax-tree id)) id_list)))] 
-      ; (foldl
-      ;   (lambda (s1 s2) (string-append s2 s1))
-      ;   ""
-      ;   (map 
-      ;     (lambda (id) 
-      ;       (string-append 
-      ;         "(" 
-      ;         (syntax-tree type) 
-      ;         " "
-      ;         (syntax-tree id)
-      ;         ")"))
-      ;       id_list))]
         (list-syntax-tree (map 
                             (lambda (id) (struct_var_declaration id type))
                             id_list))]
@@ -65,9 +45,6 @@
     [(struct_arrray_initializer_list body) (list-syntax-tree body)]
     [(struct_initializer_operator operator) (symbol->string operator)]
     [(struct_assignment var assignment_operator assignment) 
-      ; (let ([operator (match (syntax-tree assignment_operator)
-      ;                   [('-=) ('-)]
-      ;                   [('+=) ('+)])])
       (match (begin (display "compose=") (print  assignment_operator) (display"\n") assignment_operator) 
           [(struct_assignment_operator '+=)
             (string-append
@@ -100,7 +77,6 @@
               " "
               (syntax-tree assignment))]
             )]
-    ; [(struct_assignment var assignment_operator assignment) (string-append (syntax-tree assignment_operator) " " (syntax-tree var) " " (syntax-tree assignment))]
     [(struct_assignment_operator operator) (symbol->string operator)]
     [(struct_initializer_operator operator) (symbol->string operator)]
     [(struct_var_expression var) (syntax-tree var)]
@@ -137,7 +113,6 @@
                                                 (syntax-tree conditional) 
                                                 " "
                                                 "{"
-                                                ; (foldl string-append "" (map (lambda (st) (syntax-tree st)) (cons h t)))
                                                 (list-syntax-tree if-statement)
                                                 "}")]
     [(struct_if_else conditional if-statement else-statement) (string-append 
