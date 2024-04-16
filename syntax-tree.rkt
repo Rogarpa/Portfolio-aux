@@ -204,6 +204,8 @@
                                                                         ")")]
     [(struct_id_typer id type) (string-append
                                 "("
+                                "decl"
+                                " "
                                 (syntax-tree id)
                                 " "
                                 (syntax-tree type)
