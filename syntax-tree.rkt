@@ -6,13 +6,13 @@
 (define (syntax-tree expr)
   (match expr    
     ; Terminals
-    [(num v) (number->string v)]
-    [(id nombre) nombre]
+    [(num n) (number->string n)]
+    [(id name) name]
     [(struct_const const) (syntax-tree const)]
     [(struct_int_const const) (syntax-tree const)]
     [(struct_bool_const const) (syntax-tree const)]
     [(struct_type type) type]
-    [(struct_arraytype type) (string-append "(" "arrType" (syntax-tree type) ")")]
+    [(struct_arraytype type) (string-append "(" "arrType " (syntax-tree type) ")")]
     [(bool v) (if v "true" "false")]
     
     ; Pogram structure
@@ -128,7 +128,7 @@
 
     [(struct_ternal conditional if-return else-return) (string-append 
                                                           "("
-                                                          "if"
+                                                          "if-stn"
                                                           " "
                                                           (syntax-tree conditional)
                                                           " "
@@ -154,7 +154,7 @@
     
     [(struct_if_simple conditional if-statement) (string-append 
                                                   "("
-                                                  "if"
+                                                  "if-stn"
                                                   " "
                                                   (syntax-tree conditional) 
                                                   " "
@@ -164,7 +164,7 @@
                                                   ")")]
     [(struct_if_else conditional if-statement else-statement) (string-append 
                                                                 "("
-                                                                "if"
+                                                                "if-stn"
                                                                 " "
                                                                 (syntax-tree conditional)
                                                                 " "
