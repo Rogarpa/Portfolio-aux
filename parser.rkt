@@ -17,6 +17,7 @@
 (define-struct struct_main_functions (compound_statement function_list) #:transparent)
 (define-struct struct_statement_list (single_statement statement_list) #:transparent)
 (define-struct struct_empty_statement () #:transparent)
+
 (define-struct struct_var_declaration (variable type) #:transparent)
 (define-struct struct_multi_var_declaration (type id_list) #:transparent)
 (define-struct struct_var_initialization (variable type assignment_operator value) #:transparent)
@@ -36,9 +37,11 @@
 (define-struct struct_infix_equality_operator(operator) #:transparent)
 (define-struct struct_infix_boolean_operator(operator) #:transparent)
 (define-struct struct_order_operator(operator) #:transparent)
+
 (define-struct struct_if_simple (conditional if-statement) #:transparent)
 (define-struct struct_if_else (conditional if-statement else-statemten) #:transparent)
 (define-struct struct_while (conditional statement) #:transparent)
+
 (define-struct struct_function_no_return (id parameter_list compound_statement) #:transparent)
 (define-struct struct_function_return (id parameter_list return_type statement_list return_expression) #:transparent)
 (define-struct struct_return_statement (statement) #:transparent)
@@ -73,7 +76,7 @@
                 [(MAIN compound_statement function_list) (struct_main_functions $2 $3)]]
             [function_list
                 [(function)(list $1)]
-                [(function function_list)(list $1 $2)]]
+                [(function function_list)(cons $1 $2)]]
             [statement
                 [(single_statement) $1]
                 [(compound_statement) $1]]
@@ -89,7 +92,7 @@
                 [(LEFTCURLYBRACKET statement_list RIGHTCURLYBRACKET) $2]]
             [statement_list
                 [(single_statement) (list $1)]
-                [(single_statement statement_list) (list $1 $2)]]
+                [(single_statement statement_list) (cons $1 $2)]]
             [id 
                 [(ID) (id $1)]]
             [const
@@ -112,7 +115,7 @@
                 [(type id_list) (struct_multi_var_declaration $1 $2)]]
             [id_list
                 [(id) (list $1)]
-                [(id COMMA id_list) (list $1 $3)]]
+                [(id COMMA id_list) (cons $1 $3)]]
             [var_initialization
                 [(id COLON primitive_type assignment_operator expression) (struct_var_initialization $1 $3 $4 $5)]
                 [(id COLON arraytype assignment_operator array_initializer) (struct_var_initialization $1 $3 $4 $5)]]
@@ -123,7 +126,7 @@
                 [(LEFTCURLYBRACKET const_list RIGHTCURLYBRACKET) (struct_arrray_initializer_list $2)]]
             [const_list
                 [(const) (list $1)]
-                [(const COMMA const_list) (list $1 $3)]]
+                [(const COMMA const_list) (cons $1 $3)]]
             [initializer_operator
                 [(EQUAL) (struct_initializer_operator '=)]]
             [assignment_operator
@@ -188,14 +191,14 @@
                 [(RETURN expression) (struct_return_statement $2)]]
             [parameter_list
                 [(id_typer) (list $1)]
-                [(id_typer COMMA parameter_list) (list $1 $3)]]
+                [(id_typer COMMA parameter_list) (cons $1 $3)]]
             [id_typer
                 [(id COLON type) (struct_id_typer $1 $3)]]
             [function_call
                 [(id LEFTPARENTHESIS argument_list RIGTHPARENTHESIS) (struct_function_call $1 $3)]]
             [argument_list
                 [(expression) (list $1)]
-                [(expression COMMA argument_list) (list $1 $3)]]]))
+                [(expression COMMA argument_list) (cons $1 $3)]]]))
         
 
 
