@@ -20,24 +20,22 @@
                 (main [e* ... e]))
         (Function (f)
                 (i ([i* dt*] ...) t e)
-                
                 (i ([i* dt*] ...) e))
         (DeclarationType (dt)
                 t
                 (arrType t))
-        (ArrayIndex (ai)
-                (arrIndex e))
         (Expr (e)
                 c
                 dt
                 i
                 pr
+                (arrIndex e)
                 (length e)
                 (return e)
                 (while e0 e1)
                 (if-stn e0 e1)
                 (if-stn e0 e1 e2)
-                (arrElement e ai)
+                (arrElement e1 e2)
                 (decl i dt)
                 (e* ...)
                 (pr e0 e1)
@@ -141,7 +139,49 @@
 ;                                         (= (arrElement var_6 (arrIndex (- var_9 1))) var_10)})
 ;                                 (= var_9 (+ var_9 1))})
 ;                         (= var_7 (+ var_7 1))})))))
+
 (define (rename-var ir) '())
+(define (get-vars ir)
+        (nanopass-case (jelly Program) ir
+        ; (get-vars-Main m (mutable-set))
+        [(program ,[get-vars-Main : m m -> *]) (begin
+                                                (display "program-main-case: \n")
+                                                
+                                                ir)]
+        ; [[get-vars-Function : f* -> *] ... [get-vars-Function : f -> *]]
+        [(program ,[get-vars-Main : m m -> *] [,f* ... ,f]) (begin
+                                                                (display "program-main-case: \n")
+                                                                
+                                                                ir)]
+        [else (begin (display "caso Program \n")
+                ir)]))
+
+
+(define (get-vars-Main ir st)
+        (nanopass-case (jelly Main) ir
+                [(main [,e* ... ,e]) (begin
+                                        (display "main-case: \n")
+                                        (map (lambda (e) (get-vars-Expr e e)) e*)
+                                        ir)]
+                [else (begin 
+                        (display "caso Main \n")
+                        ir)]))
+(define (get-vars-Function ir st) 
+        (nanopass-case (jelly Function) ir
+                [else (begin 
+                        (display "caso Function \n")
+                        ir)]))
+(define (get-vars-DeclarationType ir st) 
+        (nanopass-case (jelly DeclarationType) ir
+                [else (begin 
+                        (display "caso DeclarationType \n")
+                        ir)]))
+(define (get-vars-Expr ir st) 
+        (nanopass-case (jelly Expr) ir
+                [else (begin 
+                        (display "caso Expr \n")
+                        ir)]))
+
 ; ENTRADA \\ENTRADA \\ENTRADA \\ENTRADA \\ENTRADA \\ENTRADA 
 ; ENTRADA \\ENTRADA \\ENTRADA \\ENTRADA \\ENTRADA \\ENTRADA 
 ; '(program 
