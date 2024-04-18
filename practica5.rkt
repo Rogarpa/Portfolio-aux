@@ -56,6 +56,7 @@
 (define (nueva)
         (let* ([str-num (number->string c)]
                [str-sim (string-append "var_" str-num)]) 
+               (display "nueva\n")
                (set! c (add1 c))
                (string->symbol str-sim)))
 
@@ -140,7 +141,81 @@
 ;                                 (= var_9 (+ var_9 1))})
 ;                         (= var_7 (+ var_7 1))})))))
 
-(define (rename-var ir) '())
+(define-pass rename-var : jelly (ir) ->  jelly ()
+        (Program : Program (ir) -> Program () 
+                [(program ,m)
+                                `(program ,(let* ([vars  (get-vars m)]
+                                                [rename-dictionary (begin 
+                                                                        ; (display vars)
+                                                                        (asigna vars))]) 
+                                                (begin 
+                                                        ; (display rename-dictionary)
+                                                        (Main m rename-dictionary))))]
+                [(program ,m [,f* ... ,f]) (let* ([vars-main  (mutable-set)]
+                                                [vars-main  (get-vars-Main m vars-main)]
+                                                [rename-dictionary-main (begin 
+                                                                                ; (display vars-main)
+                                                                                (asigna vars-main))]
+                                                [vars-functions  (mutable-set)]
+                                                [vars-functions  (get-vars-Function f vars-functions)]
+                                                [rename-dictionary-functions (begin 
+                                                                                ; (display vars-functions)
+                                                                                (asigna vars-functions))])
+                                                        `(program  
+                                                                ,(Main m rename-dictionary-main)
+                                                                [,(map (lambda (f) (Function f rename-dictionary-functions)) f*) ...
+                                                                ,(Function f rename-dictionary-functions)]))])
+        (Main : Main (ir rename-dictionary) -> Main ()
+                [(main [,e* ... ,e]) `(main [,(map (lambda (e) (Expr e rename-dictionary)) e*) ... ,(Expr e rename-dictionary)])])
+        (Function : Function (ir rename-dictionary) -> Function ()
+                [(,i ([,i* ,dt*] ...) ,t ,e) (let* (
+                                                        [vars  (mutable-set)]
+                                                        [vars  (get-vars-Function ir vars)]
+                                                        [rename-dictionary (asigna vars)]
+                                                        [i*-n  (map (lambda (v) (Expr v rename-dictionary)) i*)]
+                                                        [e-n  (Expr e rename-dictionary)])
+                                                ; (println vars)
+                                                ; (println rename-dictionary)
+                                                ; (println "+++++++++")
+                                                ; (println e)
+                                                ; (println e-n)
+                                                ; (println "+++++++++")
+                                                `(,i   ([,i*-n ,dt*] ...) ,t ,e-n)
+                                                )]
+                                                        
+                [(,i ([,i* ,dt*] ...) ,e) (let* (
+                                                        [vars  (mutable-set)]
+                                                        [vars  (get-vars-Function ir vars)]
+                                                        [rename-dictionary (asigna vars)]
+                                                        [i*-n  (map (lambda (v) (Expr v rename-dictionary)) i*)]
+                                                        [e-n  (Expr e rename-dictionary)])
+                                                ; (println vars)
+                                                ; (println rename-dictionary)
+                                                ; (println "+++++++++")
+                                                ; (println e)
+                                                ; (println e-n)
+                                                ; (println "+++++++++")
+                                                `(,i   ([,i*-n ,dt*] ...) ,e-n)
+                                                )])
+        (DeclarationType : DeclarationType (ir rename-dictionary) -> DeclarationType ()
+                [,t t]
+                [(arrType ,t) `(arrType ,t)])
+        (Expr : Expr (ir rename-dictionary) -> Expr ()
+                [,c `(,c)]
+                [,dt `(,dt)]
+                [,pr `(,pr)]
+                [,i `,(hash-ref rename-dictionary i)]
+                [(arrIndex ,[e]) `(arrIndex e)]
+                [(length ,[e]) `(length ,e)]
+                [(return ,[e]) `(return ,e)]
+                [(while ,[e0] ,[e1]) `(while ,e0 ,e1)]
+                [(if-stn ,[e0] ,[e1]) `(if-stn ,e0 ,e1)]
+                [(if-stn ,[e0] ,[e1] ,[e2]) `(if-stn ,e0 ,e1)]
+                [(arrElement ,[e1] ,[e2]) `(arrElement ,e1 ,e2)]
+                [(decl ,i ,dt) `(decl ,(Expr i rename-dictionary) ,dt)]
+                [(,[e*] ...) `(,e* ...)]
+                [(,[pr] ,[e0] ,[e1]) `(,pr ,e0 ,e1)]
+                [(,i [,[e*] ...]) `(,i [,e* ...])]))
 (define (check-case ir)
         (nanopass-case (jelly Program) ir
                 [(program ,m) (begin
@@ -351,7 +426,8 @@
                                         (display "\n")
                                         (map (lambda (e) (get-vars-Expr e variables)) e*)
                                         (get-vars-Expr e variables)
-                                        (display "\n"))]
+                                        (display "\n")
+                                        variables)]
                 [else (begin 
                         (display "caso Main \n")
                         (print ir)
@@ -368,7 +444,8 @@
                                         (map (lambda (dt) (get-vars-Expr dt variables)) dt*)
                                         (get-vars-Expr t variables)
                                         (get-vars-Expr e variables)
-                                        (display "\n"))]
+                                        (display "\n")
+                                        variables)]
         [(,i ([,i* ,dt*] ...) ,e) (begin
                                         (display "function-notype-case \n")
                                         (print ir)
@@ -377,7 +454,8 @@
                                         (map (lambda (i) (get-vars-Expr i variables)) i*)
                                         (map (lambda (dt) (get-vars-Expr dt variables)) dt*)
                                         (get-vars-Expr e variables)
-                                        (display "\n"))]
+                                        (display "\n")
+                                        variables)]
                 [else (begin 
                         (display "caso Function \n")
                         (print ir)
@@ -504,6 +582,11 @@
 
 
 
+(define (get-vars-generic function ir) (
+        (let* ([vars (mutable-set)]
+                [vars (function ir vars)])
+                vars)
+))
 ; ENTRADA \\ENTRADA \\ENTRADA \\ENTRADA \\ENTRADA \\ENTRADA 
 ; ENTRADA \\ENTRADA \\ENTRADA \\ENTRADA \\ENTRADA \\ENTRADA 
 ; '(program 
@@ -560,7 +643,7 @@
         (gdc 
             ((var1 int) (var2 int))
             int
-            {(while (!= var1 0) {(if-stn (< var1 var2) {(= var2 (- var2 var1))} else {(= var1 (- var1 var2))})}) (return b)})
+            {(while (!= var1 0) {(if-stn (< var1 var2) {(= var2 (- var2 var1))} {(= var1 (- var1 var2))})}) (return b)})
         (sort 
             ((a (arrType int)))
             (
@@ -581,6 +664,10 @@
                                         (= (arrElement a (arrIndex (- j 1))) swap)})
                                 (= j (+ j 1))})
                         (= i (+ i 1))}))))))
+(define input-2
+'(program 
+    (main {(= (decl i int) (= zzzz (+ zzzz 1))) (= zzzz (+ zzzz 1)) (= (decl r int) ( gdc (i zzz)))})
+    ))
 
 (define parsed-input (parser-jelly input))
 (define symbol-table-input
@@ -590,7 +677,7 @@
                 (gdc 
                 ((var_3 int) (var_4 int))
                 int
-                {(while (!= var_3 0) {(if-stn (< var_3 var_4) {(= var_4 (- var_4 var_3))} else {(= var_3 (- var_3 var_4))})}) (return var_5)}) 
+                {(while (!= var_3 0) {(if-stn (< var_3 var_4) {(= var_4 (- var_4 var_3))} {(= var_3 (- var_3 var_4))})}) (return var_5)}) 
                 (sort 
                 ((var_6 (arrType int)))
                 (
