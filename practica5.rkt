@@ -56,7 +56,6 @@
 (define (nueva)
         (let* ([str-num (number->string c)]
                [str-sim (string-append "var_" str-num)]) 
-               (display "nueva\n")
                (set! c (add1 c))
                (string->symbol str-sim)))
 
@@ -144,57 +143,52 @@
 (define-pass rename-var : jelly (ir) ->  jelly ()
         (Program : Program (ir) -> Program () 
                 [(program ,m)
-                                `(program ,(let* ([vars  (get-vars m)]
-                                                [rename-dictionary (begin 
-                                                                        ; (display vars)
-                                                                        (asigna vars))]) 
-                                                (begin 
-                                                        ; (display rename-dictionary)
-                                                        (Main m rename-dictionary))))]
-                [(program ,m [,f* ... ,f]) (let* ([vars-main  (mutable-set)]
-                                                [vars-main  (get-vars-Main m vars-main)]
-                                                [rename-dictionary-main (begin 
-                                                                                ; (display vars-main)
-                                                                                (asigna vars-main))]
-                                                [vars-functions  (mutable-set)]
-                                                [vars-functions  (get-vars-Function f vars-functions)]
-                                                [rename-dictionary-functions (begin 
-                                                                                ; (display vars-functions)
-                                                                                (asigna vars-functions))])
-                                                        `(program  
-                                                                ,(Main m rename-dictionary-main)
-                                                                [,(map (lambda (f) (Function f rename-dictionary-functions)) f*) ...
-                                                                ,(Function f rename-dictionary-functions)]))])
+                                `(program ,(Main m (make-hash)))]
+                [(program ,m [,f* ... ,f]) 
+                                        `(program ,(Main m (make-hash))[,(map (lambda (f) (Function f (make-hash))) f*) ...
+                                                                ,(Function f (make-hash))])])
         (Main : Main (ir rename-dictionary) -> Main ()
-                [(main [,e* ... ,e]) `(main [,(map (lambda (e) (Expr e rename-dictionary)) e*) ... ,(Expr e rename-dictionary)])])
+                [(main [,e* ... ,e]) (let* ([vars  (mutable-set)]
+                                                [vars  (get-vars-Main ir vars)]
+                                                [rename-dictionary-main (make-hash)]
+                                                [rename-dictionary-main (begin 
+                                                                                (display vars)
+                                                                                (hash-union! rename-dictionary-main rename-dictionary)
+                                                                                (hash-union! rename-dictionary-main (asigna vars))
+                                                                                rename-dictionary-main)])
+                                                        
+                                                (print rename-dictionary-main)
+                                                `(main [,(map (lambda (e) (Expr e rename-dictionary-main)) e*) ... ,(Expr e rename-dictionary-main)]))])
         (Function : Function (ir rename-dictionary) -> Function ()
                 [(,i ([,i* ,dt*] ...) ,t ,e) (let* (
                                                         [vars  (mutable-set)]
                                                         [vars  (get-vars-Function ir vars)]
-                                                        [rename-dictionary (asigna vars)]
-                                                        [i*-n  (map (lambda (v) (Expr v rename-dictionary)) i*)]
-                                                        [e-n  (Expr e rename-dictionary)])
-                                                ; (println vars)
-                                                ; (println rename-dictionary)
-                                                ; (println "+++++++++")
-                                                ; (println e)
-                                                ; (println e-n)
-                                                ; (println "+++++++++")
+                                                        [rename-dictionary-function (make-hash)]
+                                                        [rename-dictionary-function (begin
+                                                                                (hash-union!
+                                                                                rename-dictionary-function rename-dictionary)
+                                                                                (hash-union! rename-dictionary-function (asigna vars))
+                                                                                rename-dictionary-function)]
+                                                        [i*-n  (map (lambda (v) (Expr v rename-dictionary-function)) i*)]
+                                                        [e-n  (Expr e rename-dictionary-function)])
+
+                                                (print rename-dictionary-function)
                                                 `(,i   ([,i*-n ,dt*] ...) ,t ,e-n)
                                                 )]
                                                         
                 [(,i ([,i* ,dt*] ...) ,e) (let* (
                                                         [vars  (mutable-set)]
                                                         [vars  (get-vars-Function ir vars)]
-                                                        [rename-dictionary (asigna vars)]
-                                                        [i*-n  (map (lambda (v) (Expr v rename-dictionary)) i*)]
-                                                        [e-n  (Expr e rename-dictionary)])
-                                                ; (println vars)
-                                                ; (println rename-dictionary)
-                                                ; (println "+++++++++")
-                                                ; (println e)
-                                                ; (println e-n)
-                                                ; (println "+++++++++")
+                                                        [rename-dictionary-function (make-hash)]
+                                                        [rename-dictionary-function (begin
+                                                                                (hash-union!
+                                                                                rename-dictionary-function rename-dictionary)
+                                                                                (hash-union! rename-dictionary-function (asigna vars))
+                                                                                rename-dictionary-function)]
+                                                        [i*-n  (map (lambda (v) (Expr v rename-dictionary-function)) i*)]
+                                                        [e-n  (Expr e rename-dictionary-function)])
+
+                                                (print rename-dictionary-function)
                                                 `(,i   ([,i*-n ,dt*] ...) ,e-n)
                                                 )])
         (DeclarationType : DeclarationType (ir rename-dictionary) -> DeclarationType ()
