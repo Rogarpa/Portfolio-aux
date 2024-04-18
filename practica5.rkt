@@ -433,8 +433,7 @@
                                         (display "function-type-case \n")
                                         (print ir)
                                         (display "\n")
-                                        (get-vars-Expr i variables)
-                                        (map (lambda (i) (get-vars-Expr i variables)) i*)
+                                        (map (lambda (id) (get-vars-Expr id variables)) i*)
                                         (map (lambda (dt) (get-vars-Expr dt variables)) dt*)
                                         (get-vars-Expr t variables)
                                         (get-vars-Expr e variables)
@@ -444,8 +443,7 @@
                                         (display "function-notype-case \n")
                                         (print ir)
                                         (display "\n")
-                                        (get-vars-Expr i variables)
-                                        (map (lambda (i) (get-vars-Expr i variables)) i*)
+                                        (map (lambda (id) (get-vars-Expr id variables)) i*)
                                         (map (lambda (dt) (get-vars-Expr dt variables)) dt*)
                                         (get-vars-Expr e variables)
                                         (display "\n")
@@ -625,8 +623,198 @@
 ; var_9 int
 ; var_10 int
 ; )
-(define (symbol-table ir) '())
+(define (symbol-table ir) (let*([renamed-ir (rename-var ir)]
+                                        [renamed-vars-keys (get-vars renamed-ir)]
+                                        [renamed-vars-table (make-hash)])
+                                (for ([var renamed-vars-keys])
+                                (hash-set! renamed-vars-table var 'undefined))
+                                (symbol-table-Program renamed-ir renamed-vars-table)))
+(define (symbol-table-Program ir table)
+        (nanopass-case (jelly Program) ir
+                [(program ,m) (begin
+                                (display "program-main-case: \n")
+                                (print ir)
+                                (display "\n")
+                                (symbol-table-Main m table)
+                                (display "\n")
+                                table)]
+                [(program ,m [,f* ... ,f]) (begin
+                                                (display "program-main-fun-case: \n")
+                                                (print ir)
+                                                (display "\n")
+                                                (symbol-table-Main m table)
+                                                (map (lambda (f) (symbol-table-Function f table)) f*)
+                                                (symbol-table-Function f table)
+                                                (display "\n")
+                                                table)]
+                [else (begin (display "caso Program \n")
+                        (print ir)
+                        (display "\n"))]))
 
+(define (symbol-table-Main ir table)
+        (nanopass-case (jelly Main) ir
+                [(main [,e* ... ,e]) (begin
+                                        (display "main-case: \n")
+                                        (print ir)
+                                        (display "\n")
+                                        (map (lambda (e) (symbol-table-Expr e table)) e*)
+                                        (symbol-table-Expr e table)
+                                        (display "\n")
+                                        table)]
+                [else (begin 
+                        (display "caso Main \n")
+                        (print ir)
+                        (display "\n"))]))
+
+(define (symbol-table-Function ir table) 
+        (nanopass-case (jelly Function) ir
+        [(,i ([,i* ,dt*] ...) ,t ,e) (begin
+                                        (display "function-type-case \n")
+                                        (print ir)
+                                        (display "\n")
+                                        (hash-set! table i (cons t (map declarationType->symbol dt*)))
+                                        (map (lambda (id ty) (hash-set! table id (declarationType->symbol ty))) i* dt*)
+                                        (symbol-table-Expr t table)
+                                        (symbol-table-Expr e table)
+                                        (display "\n")
+                                        table)]
+        [(,i ([,i* ,dt*] ...) ,e) (begin
+                                        (display "function-notype-case \n")
+                                        (print ir)
+                                        (display "\n")
+                                        (map (lambda (id ty) (hash-set! table id (declarationType->symbol ty))) i* dt*)
+                                        (symbol-table-Expr e table)
+                                        (display "\n")
+                                        table)]
+                [else (begin 
+                        (display "caso Function \n")
+                        (print ir)
+                        (display "\n"))]))
+
+(define (symbol-table-DeclarationType ir table) 
+        (nanopass-case (jelly DeclarationType) ir
+                [,t (begin
+                        (display "type-case \n")
+                        (print ir)
+                        (display "\n"))]
+                [(arrType ,t) (begin
+                                (display "arr-type-case \n")
+                                (print ir)
+                                (display "\n"))]
+                [else (begin 
+                        (display "caso DeclarationType \n")
+                        (print ir)
+                        (display "\n"))]))
+
+(define (symbol-table-Expr ir table) 
+        (nanopass-case (jelly Expr) ir
+                [,c (begin
+                                (display "expr-c-case \n")
+                                (print ir)
+                                (display "\n")
+                                (display "\n"))]
+                [,dt (begin
+                                (display "expr-dt-case \n")
+                                (print ir)
+                                (display "\n")
+                                (symbol-table-DeclarationType dt table)
+                                (display "\n"))]
+                [,pr (begin
+                                (display "expr-pr-case \n")
+                                (print ir)
+                                (display "\n")
+                                (display "\n"))]
+                [,i (begin
+                                (display "expr-i-case \n")
+                                (print ir)
+                                (display "\n")
+                                (display "\n"))]
+                [(arrIndex ,e) (begin
+                                (display "expr-(arrIndex e)-case \n")
+                                (print ir)
+                                (display "\n")
+                                (symbol-table-Expr e table)
+                                (display "\n"))]
+                [(length ,e) (begin
+                                (display "expr-(length e)-case \n")
+                                (print ir)
+                                (display "\n")
+                                (symbol-table-Expr e table)
+                                (display "\n"))]
+                [(return ,e) (begin
+                                (display "expr-(return e)-case \n")
+                                (print ir)
+                                (display "\n")
+                                (symbol-table-Expr e table)
+                                (display "\n"))]
+                [(while ,e0 ,e1) (begin
+                                (display "expr-(while e0 e1)-case \n")
+                                (print ir)
+                                (display "\n")
+                                (symbol-table-Expr e0 table)
+                                (symbol-table-Expr e1 table)
+                                (display "\n"))]
+                [(if-stn ,e0 ,e1) (begin
+                                (display "expr-(if-stn e0 e1)-case \n")
+                                (print ir)
+                                (display "\n")
+                                (symbol-table-Expr e0 table)
+                                (symbol-table-Expr e1 table)
+                                (display "\n"))]
+                [(if-stn ,e0 ,e1 ,e2) (begin
+                                (display "expr-(if-stn e0 e1 e2)-case \n")
+                                (print ir)
+                                (display "\n")
+                                (symbol-table-Expr e0 table)
+                                (symbol-table-Expr e1 table)
+                                (symbol-table-Expr e2 table)
+                                (display "\n"))]
+                [(arrElement ,e1 ,e2) (begin
+                                (display "expr-(arrElement e1 e2)-case \n")
+                                (print ir)
+                                (display "\n")
+                                (symbol-table-Expr e1 table)
+                                (symbol-table-Expr e2 table)
+                                (display "\n"))]
+                [(decl ,i ,dt) (begin
+                                (display "expr-(decl i dt)-case \n")
+                                (print ir)
+                                (display "\n")
+                                (hash-set! table i (declarationType->symbol dt))
+                                (display "\n"))]
+                [(,e* ...) (begin
+                                (display "expr-(e* ...)-case \n")
+                                (print ir)
+                                (display "\n")
+                                (map (lambda (e) (symbol-table-Expr e table)) e*)
+                                (display "\n"))]
+                [(,pr ,e0 ,e1) (begin
+                                (display "expr-(pr e0 e1)-case \n")
+                                (print ir)
+                                (display "\n")
+                                (symbol-table-Expr pr table)
+                                (symbol-table-Expr e0 table)
+                                (symbol-table-Expr e1 table)
+                                (display "\n"))]
+                [(,i [,e* ...]) (begin
+                                (display "expr-(i [e* ...])-case \n")
+                                (print ir)
+                                (display "\n")
+                                (symbol-table-Expr i i)
+                                (map (lambda (e) (symbol-table-Expr e table)) e*)
+                                (display "\n"))]
+                [else (begin 
+                        (display "caso Expr \n")
+                        (print ir)
+                        (display "\n"))]))
+(define (declarationType->symbol ir)
+        (nanopass-case (jelly DeclarationType) ir
+                [,t t]
+                [(arrType ,t) `(arrType ,t)]
+                [else (begin 
+                        (display "caso DeclarationType \n")
+                        (print ir)
+                        (display "\n"))]))
 (define (parse-complete s) (parser-jelly (read (open-input-string (syntax-tree (parsea s))))))
 (define (parser-input s) (read (open-input-string (syntax-tree (parsea s)))))
 
