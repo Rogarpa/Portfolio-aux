@@ -27,8 +27,8 @@
         (Expr (e)
                 c
                 dt
-                i
                 pr
+                i
                 (arrIndex e)
                 (length e)
                 (return e)
@@ -141,46 +141,183 @@
 ;                         (= var_7 (+ var_7 1))})))))
 
 (define (rename-var ir) '())
-(define (get-vars ir)
+(define (check-case ir)
         (nanopass-case (jelly Program) ir
-        ; (get-vars-Main m (mutable-set))
-        [(program ,[get-vars-Main : m m -> *]) (begin
-                                                (display "program-main-case: \n")
-                                                
-                                                ir)]
-        ; [[get-vars-Function : f* -> *] ... [get-vars-Function : f -> *]]
-        [(program ,[get-vars-Main : m m -> *] [,f* ... ,f]) (begin
-                                                                (display "program-main-case: \n")
-                                                                
-                                                                ir)]
-        [else (begin (display "caso Program \n")
-                ir)]))
+                [(program ,m) (begin
+                                        (display "program-main-case: \n")
+                                        (print ir)
+                                        (display "\n")
+                                        (check-case-Main m)
+                                        (display "\n"))]
+                [(program ,m [,f* ... ,f]) (begin
+                                                (display "program-main-fun-case: \n")
+                                                (print ir)
+                                                (display "\n")
+                                                (check-case-Main m m)
+                                                (map (lambda (f) (check-case-Function f f)) f*)
+                                                (check-case-Function f f)
+                                                (display "\n"))]
+                [else (begin (display "caso Program \n")
+                        (print ir)
+                        (display "\n"))]))
 
 
-(define (get-vars-Main ir st)
+(define (check-case-Main ir st)
         (nanopass-case (jelly Main) ir
                 [(main [,e* ... ,e]) (begin
                                         (display "main-case: \n")
-                                        (map (lambda (e) (get-vars-Expr e e)) e*)
-                                        ir)]
+                                        (print ir)
+                                        (display "\n")
+                                        (map (lambda (e) (check-case-Expr e e)) e*)
+                                        (check-case-Expr e e)
+                                        (display "\n"))]
                 [else (begin 
                         (display "caso Main \n")
-                        ir)]))
-(define (get-vars-Function ir st) 
+                        (print ir)
+                        (display "\n"))]))
+(define (check-case-Function ir st) 
         (nanopass-case (jelly Function) ir
+        [(,i ([,i* ,dt*] ...) ,t ,e) (begin
+                                        (display "function-type-case \n")
+                                        (print ir)
+                                        (display "\n")
+                                        (check-case-Expr i i)
+                                        (map (lambda (i) (check-case-Expr i i)) i*)
+                                        (map (lambda (dt) (check-case-Expr dt dt)) dt*)
+                                        (check-case-Expr t t)
+                                        (check-case-Expr e e)
+                                        (display "\n"))]
+        [(,i ([,i* ,dt*] ...) ,e) (begin
+                                        (display "function-notype-case \n")
+                                        (print ir)
+                                        (display "\n")
+                                        (check-case-Expr i i)
+                                        (map (lambda (i) (check-case-Expr i i)) i*)
+                                        (map (lambda (dt) (check-case-Expr dt dt)) dt*)
+                                        (check-case-Expr e e)
+                                        (display "\n"))]
                 [else (begin 
                         (display "caso Function \n")
-                        ir)]))
-(define (get-vars-DeclarationType ir st) 
+                        (print ir)
+                        (display "\n"))]))
+(define (check-case-DeclarationType ir st) 
         (nanopass-case (jelly DeclarationType) ir
+                [,t (begin
+                        (display "type-case \n")
+                        (print ir)
+                        (display "\n"))]
+                [(arrType ,t) (begin
+                                (display "arr-type-case \n")
+                                (print ir)
+                                (display "\n"))]
                 [else (begin 
                         (display "caso DeclarationType \n")
-                        ir)]))
-(define (get-vars-Expr ir st) 
+                        (print ir)
+                        (display "\n"))]))
+(define (check-case-Expr ir st) 
         (nanopass-case (jelly Expr) ir
+                [,c (begin
+                                (display "expr-c-case \n")
+                                (print ir)
+                                (display "\n")
+                                (display "\n"))]
+                [,dt (begin
+                                (display "expr-dt-case \n")
+                                (print ir)
+                                (display "\n")
+                                (check-case-DeclarationType dt dt)
+                                (display "\n"))]
+                [,pr (begin
+                                (display "expr-pr-case \n")
+                                (print ir)
+                                (display "\n")
+                                (display "\n"))]
+                [,i (begin
+                                (display "expr-i-case \n")
+                                (print ir)
+                                (display "\n")
+                                (display "\n"))]
+                [(arrIndex ,e) (begin
+                                (display "expr-(arrIndex e)-case \n")
+                                (print ir)
+                                (display "\n")
+                                (check-case-Expr e e)
+                                (display "\n"))]
+                [(length ,e) (begin
+                                (display "expr-(length e)-case \n")
+                                (print ir)
+                                (display "\n")
+                                (check-case-Expr e e)
+                                (display "\n"))]
+                [(return ,e) (begin
+                                (display "expr-(return e)-case \n")
+                                (print ir)
+                                (display "\n")
+                                (check-case-Expr e e)
+                                (display "\n"))]
+                [(while ,e0 ,e1) (begin
+                                (display "expr-(while e0 e1)-case \n")
+                                (print ir)
+                                (display "\n")
+                                (check-case-Expr e0 e0)
+                                (check-case-Expr e1 e1)
+                                (display "\n"))]
+                [(if-stn ,e0 ,e1) (begin
+                                (display "expr-(if-stn e0 e1)-case \n")
+                                (print ir)
+                                (display "\n")
+                                (check-case-Expr e0 e0)
+                                (check-case-Expr e1 e1)
+                                (display "\n"))]
+                [(if-stn ,e0 ,e1 ,e2) (begin
+                                (display "expr-(if-stn e0 e1 e2)-case \n")
+                                (print ir)
+                                (display "\n")
+                                (check-case-Expr e0 e0)
+                                (check-case-Expr e1 e1)
+                                (check-case-Expr e2 e2)
+                                (display "\n"))]
+                [(arrElement ,e1 ,e2) (begin
+                                (display "expr-(arrElement e1 e2)-case \n")
+                                (print ir)
+                                (display "\n")
+                                (check-case-Expr e1 e1)
+                                (check-case-Expr e2 e2)
+                                (display "\n"))]
+                [(decl ,i ,dt) (begin
+                                (display "expr-(decl i dt)-case \n")
+                                (print ir)
+                                (display "\n")
+                                (check-case-Expr i i)
+                                (check-case-Expr dt dt)
+                                (display "\n"))]
+                [(,e* ...) (begin
+                                (display "expr-(e* ...)-case \n")
+                                (print ir)
+                                (display "\n")
+                                (map (lambda (e) (check-case-Expr e e)) e*)
+                                (display "\n"))]
+                [(,pr ,e0 ,e1) (begin
+                                (display "expr-(pr e0 e1)-case \n")
+                                (print ir)
+                                (display "\n")
+                                (check-case-Expr pr pr)
+                                (check-case-Expr e0 e0)
+                                (check-case-Expr e1 e1)
+                                (display "\n"))]
+                [(,i [,e* ...]) (begin
+                                (display "expr-(i [e* ...])-case \n")
+                                (print ir)
+                                (display "\n")
+                                (check-case-Expr i i)
+                                (map (lambda (e) (check-case-Expr e e)) e*)
+                                (display "\n"))]
                 [else (begin 
                         (display "caso Expr \n")
-                        ir)]))
+                        (print ir)
+                        (display "\n"))]))
+
+
 
 ; ENTRADA \\ENTRADA \\ENTRADA \\ENTRADA \\ENTRADA \\ENTRADA 
 ; ENTRADA \\ENTRADA \\ENTRADA \\ENTRADA \\ENTRADA \\ENTRADA 
@@ -238,7 +375,7 @@
         (gdc 
             ((var1 int) (var2 int))
             int
-            {(while (!= var1 0) {(if-stn (< var1 var2) {(= var2 (- var2 var1))} else {(= var1 (- var1 var2))})}) (return b)}) 
+            {(while (!= var1 0) {(if-stn (< var1 var2) {(= var2 (- var2 var1))} else {(= var1 (- var1 var2))})}) (return b)})
         (sort 
             ((a (arrType int)))
             (

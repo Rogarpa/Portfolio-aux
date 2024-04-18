@@ -172,8 +172,6 @@
                                                                 (list-syntax-tree if-statement)
                                                                 "}"
                                                                 " "
-                                                                "else"
-                                                                " "
                                                                 "{"
                                                                 (list-syntax-tree else-statement)
                                                                 "}"
