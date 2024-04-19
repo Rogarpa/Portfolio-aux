@@ -79,12 +79,10 @@
                                                 [vars  (get-vars-Main ir vars)]
                                                 [rename-dictionary-main (make-hash)]
                                                 [rename-dictionary-main (begin 
-                                                                                (display vars)
                                                                                 (hash-union! rename-dictionary-main rename-dictionary)
                                                                                 (hash-union! rename-dictionary-main (asigna vars))
                                                                                 rename-dictionary-main)])
                                                         
-                                                (print rename-dictionary-main)
                                                 `(main [,(map (lambda (e) (Expr e rename-dictionary-main)) e*) ... ,(Expr e rename-dictionary-main)]))])
         (Function : Function (ir rename-dictionary) -> Function ()
                 [(,i ([,i* ,dt*] ...) ,t ,e) (let* (
@@ -99,7 +97,6 @@
                                                         [i*-n  (map (lambda (v) (Expr v rename-dictionary-function)) i*)]
                                                         [e-n  (Expr e rename-dictionary-function)])
 
-                                                (print rename-dictionary-function)
                                                 `(,i   ([,i*-n ,dt*] ...) ,t ,e-n)
                                                 )]
                                                         
@@ -115,7 +112,6 @@
                                                         [i*-n  (map (lambda (v) (Expr v rename-dictionary-function)) i*)]
                                                         [e-n  (Expr e rename-dictionary-function)])
 
-                                                (print rename-dictionary-function)
                                                 `(,i   ([,i*-n ,dt*] ...) ,e-n)
                                                 )])
         (DeclarationType : DeclarationType (ir rename-dictionary) -> DeclarationType ()
@@ -126,7 +122,7 @@
                 [,dt `(,dt)]
                 [,pr `(,pr)]
                 [,i `,(hash-ref rename-dictionary i)]
-                [(arrIndex ,[e]) `(arrIndex e)]
+                [(arrIndex ,[e]) `(arrIndex ,e)]
                 [(length ,[e]) `(length ,e)]
                 [(return ,[e]) `(return ,e)]
                 [(while ,[e0] ,[e1]) `(while ,e0 ,e1)]
