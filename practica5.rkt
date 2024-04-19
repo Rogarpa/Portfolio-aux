@@ -66,7 +66,7 @@
              (set-for-each vars
                            (lambda (v) (hash-set! tabla v (nueva))))
              tabla))
-
+; Receive a expression of jelly language and returns it renamed with each distinct variable in a unique way
 (define-pass rename-var : jelly (ir) ->  jelly ()
         (Program : Program (ir) -> Program () 
                 [(program ,m)
@@ -133,7 +133,7 @@
                 [(,[e*] ...) `(,e* ...)]
                 [(,[pr] ,[e0] ,[e1]) `(,pr ,e0 ,e1)]
                 [(,i [,[e*] ...]) `(,i [,e* ...])]))
-
+; Receive a expression of jelly language and returns a set of it distinct variables values
 (define (get-vars ir)
         (nanopass-case (jelly Program) ir
                 [(program ,m) (let ([variables (mutable-set)])
@@ -235,13 +235,13 @@
                 [else (display "caso Expr \n")]))
 
 
-
+; Receive a function of the shape of get-vars-* and returns it evaluated with a mutable set
 (define (get-vars-generic function ir) (
         (let* ([vars (mutable-set)]
                 [vars (function ir vars)])
                 vars)
 ))
-
+; Receive a expression of jelly language and returns a dictionary with his variables and his types, undefined if has no type
 (define (symbol-table ir) (let*([renamed-ir (rename-var ir)]
                                         [renamed-vars-keys (get-vars renamed-ir)]
                                         [renamed-vars-table (make-hash)])
@@ -342,15 +342,21 @@
                                 table)]
                 [else (begin 
                         (display "caso Expr \n"))]))
+; Cast an element of jelly to symbol (declarationType production)
 (define (declarationType->symbol ir)
         (nanopass-case (jelly DeclarationType) ir
                 [,t t]
                 [(arrType ,t) `(arrType ,t)]
                 [else (begin 
                         (display "caso DeclarationType \n"))]))
+
+; Parse a string trough jelly
 (define (parse-complete s) (parser-jelly (read (open-input-string (syntax-tree (parsea s))))))
+
+; Parse a string to be used as jelly input
 (define (parser-input s) (read (open-input-string (syntax-tree (parsea s)))))
 
+; Input for testing parser-jelly 
 (define input
 '(program 
     (main {(= (decl i int) (= zzzz (+ zzzz 1))) (= zzzz (+ zzzz 1)) (= (decl r int) ( gdc (i zzz)))})
@@ -379,37 +385,5 @@
                                         (= (arrElement a (arrIndex (- j 1))) swap)})
                                 (= j (+ j 1))})
                         (= i (+ i 1))}))))))
-(define input-2
-'(program 
-    (main {(= (decl i int) (= zzzz (+ zzzz 1))) (= zzzz (+ zzzz 1)) (= (decl r int) ( gdc (i zzz)))})
-    ))
-
+; Input for testing rename-vars and symbol-table
 (define parsed-input (parser-jelly input))
-(define symbol-table-input
-        '(program 
-        (main {(= (decl var_0 int) (= var_1 (+ var_1 1))) (= var_1 (+ var_1 1)) (= (decl var_2 int) ( gdc (var_0 var_1)))})
-        (
-                (gdc 
-                ((var_3 int) (var_4 int))
-                int
-                {(while (!= var_3 0) {(if-stn (< var_3 var_4) {(= var_4 (- var_4 var_3))} {(= var_3 (- var_3 var_4))})}) (return var_5)}) 
-                (sort 
-                ((var_6 (arrType int)))
-                (
-                        (= (decl var_7 int) 0)
-                        (= (decl var_8 int) ( length (var_6)))
-                        (while 
-                        (< var_7 var_8)
-                        {
-                                (= (decl var_9 int) var_7)
-                                (while 
-                                (> var_9 0)
-                                {
-                                        (if-stn 
-                                        (> (arrElement var_6 (arrIndex (- var_9 1))) (arrElement var_6 (arrIndex var_9)))
-                                        {
-                                                (= (decl var_10 int) (arrElement var_6 (arrIndex var_9)))
-                                                (= (arrElement var_6 (arrIndex var_9)) (arrElement var_6 (arrIndex (- var_9 1))))
-                                                (= (arrElement var_6 (arrIndex (- var_9 1))) var_10)})
-                                        (= var_9 (+ var_9 1))})
-                                (= var_7 (+ var_7 1))}))))))
