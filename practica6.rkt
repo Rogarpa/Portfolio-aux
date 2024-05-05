@@ -14,20 +14,21 @@
                                 'unit)]
                 [(program ,m [,f* ... ,f]) (begin
                                                 (get-type-Main m table)
-                                                (map (lambda (f) (get-type-Function f table)) f*)
-                                                (get-type-Function f table)
+                                                ; (map (lambda (f) (get-type-Function f table)) f*)
+                                                ; (get-type-Function f table)
                                                 'unit)]
                 [else (begin (display "caso Program \n"))]))
 
 (define (get-type-Main ir table)
         (nanopass-case (jelly Main) ir
                 [(main [,e* ... ,e]) (begin
-                                        (map (lambda (e) (get-type-Expr e table)) e*)
-                                        ; (get-type-Expr e table)
+                                        ; (map (lambda (e) (get-type-Expr e table)) e*)
+                                        (get-type-Expr e table)
+                                        (display (get-type-Expr e table))
                                         'unit)]
                 [else (begin 
-                        (display "caso Main \n"))
-                        'unit]))
+                        (display "caso Main \n")
+                        'unit)]))
 
 (define (get-type-Function ir table) 
         (nanopass-case (jelly Function) ir
@@ -37,10 +38,10 @@
                                         ; (get-type-Expr t table)
                                         (display (get-type-Expr e table))
                                         'unit)]
-        [(,i ([,i* ,dt*] ...) ,e) (begin
-                                        ; (map (lambda (id ty) (hash-set! table id (declarationType->symbol ty))) i* dt*)
-                                        (display (get-type-Expr e table))
-                                        'unit)]
+        ; [(,i ([,i* ,dt*] ...) ,e) (begin
+        ;                                 ; (map (lambda (id ty) (hash-set! table id (declarationType->symbol ty))) i* dt*)
+        ;                                 (display (get-type-Expr e table))
+        ;                                 'unit)]
                 [else (begin 
                         (display "caso Function \n"))
                         'unit]))
@@ -55,22 +56,25 @@
 
 (define (get-type-Expr ir table) 
         (nanopass-case (jelly Expr) ir
-                [,c ((cond 
-                    [(integer? c) 'int]
-                    [(boolean? c) 'bool]
-                    [else (error "Do not exist type for this constant" c)]))]
+                [,c (cond 
+                        [(integer? c) 'int]
+                        [(boolean? c) 'bool]
+                        [else (error "Do not exist type for this constant" c)])]
                 [,dt (begin
                             (get-type-DeclarationType dt table))]
                 [,pr 'unit]
                 [,i (hash-ref table i)]
-                [(arrIndex ,e) (begin
-                                table
-                                (get-type-Expr e table))]
-                [(length ,e) (begin
-                                table
-                                (if (arrayType? (get-type-Expr e))
-                                    'int
-                                    (error "Do not exist type for length of this array" e)))]
+                ; [(arrIndex ,e) (begin
+                ;                 table
+                ;                 (get-type-Expr e table))]
+                
+                ; [(length ,e) (begin
+                ;                 table
+                ;                 (if (arrayType? (get-type-Expr e))
+                ;                     'int
+                ;                     (error "Do not exist type for length of this array" e)))]
+
+
                 ; [(return ,e) (begin
                 ;                 (get-type-Expr e table)
                 ;                 table)]
@@ -87,21 +91,25 @@
                 ;                 (get-type-Expr e1 table)
                 ;                 (get-type-Expr e2 table)
                 ;                 table)]
-                [(arrElement ,e1 ,e2) (begin
-                                        table
-                                        (if (and 
-                                                (arrayType? (get-type-Expr e1 table))
-                                                (integer? (get-type-Expr e2 table)))
-                                            'unit
-                                            (error "Do not exist type for arrElement " e2 "of" e1)))]
-                [(decl ,i ,dt) 'unit]
-                [(,e* ...) (let*
-                                ([types-list (map (lambda (e) (get-type-Expr e table)) e*)]
-                                [is-same-type-list (foldr eq? (car types-list) (cdr types-list))])
-                                (if is-same-type-list
-                                    (car types-list)
-                                    (error "Do not exist type for a heterogeneus list")))]
-                [(,pr ,e0 ,e1) (let
+                
+                
+                
+                
+                ; [(arrElement ,e1 ,e2) (begin
+                ;                         table
+                ;                         (if (and 
+                ;                                 (arrayType? (get-type-Expr e1 table))
+                ;                                 (integer? (get-type-Expr e2 table)))
+                ;                             'unit
+                ;                             (error "Do not exist type for arrElement " e2 "of" e1)))]
+                [(decl ,i ,dt) (hash-ref table i)]
+                ; [(,e* ...) (let*
+                ;                 ([types-list (map (lambda (e) (get-type-Expr e table)) e*)]
+                ;                 [is-same-type-list (foldr eq? (car types-list) (cdr types-list))])
+                ;                 (if is-same-type-list
+                ;                     (car types-list)
+                ;                     (error "Do not exist type for a heterogeneus list")))]
+                [(,pr ,e0 ,e1) (let*
                                 ([e0-type (get-type-Expr e0 table)]
                                 [e1-type (get-type-Expr e1 table)])
                                 (cond 
@@ -114,10 +122,10 @@
                                     [(memq pr '(== != && pipe)) (if (and (eq? e0-type 'bool) (eq? e1-type 'bool))
                                                                     'bool
                                                                     (error "Do not exist type for boolean operation of non boolean expressions"))]
-                                    [[(eq? pr '(=)) (cond 
-                                                        [(arrayType? e0-type) 'unit]
+                                    [(memq pr '(=)) (cond 
                                                         [(eq? e0-type e1-type) 'unit]
-                                                        [else (error "Do not exist type for assignation of distinct types")])]]))]
+                                                        [else (error "Do not exist type for assignation of distinct types")])]))]
+                
                 ; [(,i [,e* ...]) (begin
                 ;                 (get-type-Expr i i)
                 ;                 (map (lambda (e) (get-type-Expr e table)) e*)
@@ -168,13 +176,12 @@
 (define input-get-type2 (parser-jelly
     '(program
    (main
-    ((((=)) (decl var_2 int) (((=)) var_0 (((+)) var_0 ((1)))))
-     (((=)) var_0 (((+)) var_0 ((1))))
-     (((=)) (decl var_1 int) (var_4 (var_2 var_3))))))))
+    ((= (decl var_0 int) 5)
+     )))))
+
 (define input-get-type2-table
-(make-hash '((var_0 . int)
-       (var_1 . undefined)
-       (var_2 . int)
-       (var_3 . undefined)
-       (var_4 . undefined)))
-)
+    (make-hash '((var_0 . int)
+        (var_1 . undefined)
+        (var_2 . int)
+        (var_3 . undefined)
+        (var_4 . undefined))))
