@@ -121,7 +121,7 @@
         (Expr : Expr (ir rename-dictionary) -> Expr ()
                 [,c `(,c)]
                 [,dt `(,dt)]
-                [,pr `(,pr)]
+                [,pr `,pr]
                 [,i `,(hash-ref rename-dictionary i)]
                 [(arrIndex ,[e]) `(arrIndex ,e)]
                 [(length ,[e]) `(length ,e)]
