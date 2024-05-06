@@ -130,10 +130,7 @@
                 ;                     (car types-list)
                 ;                     (error "Do not exist type for a heterogeneus list")))]
                 [(,e* ...) (begin
-                                ; (map (lambda (e) (get-type-Expr e table)) e*)
-                                (display ir)
-                                (map (lambda (e) (display "\n")(display e)) e*)
-                                (map (lambda (e) (display "\n")(display (get-type-Expr e table))) e*)
+                                (map (lambda (e) (get-type-Expr e table)) e*)
                                 'unit)]
                 [else (begin 
                         (display "caso Expr \n")
