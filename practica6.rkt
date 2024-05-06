@@ -63,44 +63,47 @@
                             (get-type-DeclarationType dt table))]
                 [,pr 'unit]
                 [,i (hash-ref table i)]
-                ; [(arrIndex ,e) (begin
-                ;                 table
-                ;                 (get-type-Expr e table))]
+                [(arrIndex ,e) (begin
+                                (get-type-Expr e table))]
                 
-                ; [(length ,e) (begin
-                ;                 table
-                ;                 (if (arrayType? (get-type-Expr e))
-                ;                     'int
-                ;                     (error "Do not exist type for length of this array" e)))]
+                [(length ,e) (begin
+                                (if (arrayType? (get-type-Expr e table))
+                                    'int
+                                    (error "Do not exist type for length of this array" (get-type-Expr e table))))]
 
-
-                ; [(return ,e) (begin
-                ;                 (get-type-Expr e table)
-                ;                 table)]
-                ; [(while ,e0 ,e1) (begin
-                ;                 (get-type-Expr e0 table)
-                ;                 (get-type-Expr e1 table)
-                ;                 table)]
-                ; [(if-stn ,e0 ,e1) (begin
-                ;                 (get-type-Expr e0 table)
-                ;                 (get-type-Expr e1 table)
-                ;                 table)]
-                ; [(if-stn ,e0 ,e1 ,e2) (begin
-                ;                 (get-type-Expr e0 table)
-                ;                 (get-type-Expr e1 table)
-                ;                 (get-type-Expr e2 table)
-                ;                 table)]
+                [(return ,e) (begin
+                                (get-type-Expr e table))]
+                [(while ,e0 ,e1) (begin
+                                    (if (and (eq? (get-type-Expr e0 table) 'bool)
+                                            ; (eq? (get-type-Expr e1 table) 'unit))
+                                            (get-type-Expr e1 table))
+                                        'unit
+                                        (error "While type structure incorrect")))]
+                [(if-stn ,e0 ,e1) (begin
+                                    (if (and (eq? (get-type-Expr e0 table) 'bool)
+                                            ; (eq? (get-type-Expr e1 table) 'unit))
+                                            (get-type-Expr e1 table))
+                                        'unit
+                                        (error "If type structure incorrect")))]
+                [(if-stn ,e0 ,e1 ,e2) (begin
+                                        (if (and (eq? (get-type-Expr e0 table) 'bool)
+                                                ; (eq? (get-type-Expr e1 table) 'unit)
+                                                (get-type-Expr e1 table)
+                                                ; (eq? (get-type-Expr e2 table) 'unit))
+                                                (get-type-Expr e2 table))
+                                            'unit
+                                            (error "If-Else type structure incorrect")))]
                 
                 
                 
                 
-                ; [(arrElement ,e1 ,e2) (begin
-                ;                         table
-                ;                         (if (and 
-                ;                                 (arrayType? (get-type-Expr e1 table))
-                ;                                 (integer? (get-type-Expr e2 table)))
-                ;                             'unit
-                ;                             (error "Do not exist type for arrElement " e2 "of" e1)))]
+                [(arrElement ,e1 ,e2) (begin
+                                        (let ([e1-type (get-type-Expr e1 table)])
+                                            (if (and 
+                                                (arrayType? e1-type)
+                                                (eq? (get-type-Expr e2 table) 'int))
+                                                (cdr e1-type)
+                                                (error "Do not exist type for arrElement" e2 "of" e1))))]
                 [(decl ,i ,dt) (hash-ref table i)]
                 
                 [(,pr ,e0 ,e1) (let*
@@ -140,7 +143,7 @@
 (define (arrayType? type)
     (match type
         [(list arrayType t) (and (eq? arrayType 'arrType) (not (eq? (type? t) '())))]
-        [else 'unit]))
+        [else false]))
 (define input-get-type (parser-jelly
     '(program
         (main
@@ -178,10 +181,7 @@
 (define input-get-type2 (parser-jelly
     '(program
         (main
-                    (
-                        (= (decl var_0 int) (= var_2 (+ 1 1)))
-                    (= var_0 (+ var_0 1))
-                    (= (decl var_2 int) (+ var_2 (+ var_0 var_0)))
+                    (   (arrElement var_4 #t)
                     )))))
 
 (define input-get-type2-table
@@ -189,4 +189,4 @@
         (var_1 . undefined)
         (var_2 . int)
         (var_3 . undefined)
-        (var_4 . undefined))))
+        (var_4 . (arrType int)))))
