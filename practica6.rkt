@@ -32,15 +32,11 @@
 (define (get-type-Function ir table) 
         (nanopass-case (jelly Function) ir
         [(,i ([,i* ,dt*] ...) ,t ,e) (begin
-                                        ; (hash-set! table i (cons t (map declarationType->symbol dt*)))
-                                        ; (map (lambda (id ty) (hash-set! table id (declarationType->symbol ty))) i* dt*)
-                                        ; (get-type-Expr t table)
                                         (get-type-Expr e table)
                                         'unit)]
-        ; [(,i ([,i* ,dt*] ...) ,e) (begin
-        ;                                 ; (map (lambda (id ty) (hash-set! table id (declarationType->symbol ty))) i* dt*)
-        ;                                 (display (get-type-Expr e table))
-        ;                                 'unit)]
+        [(,i ([,i* ,dt*] ...) ,e) (begin
+                                        (get-type-Expr e table)
+                                        'unit)]
                 [else (begin 
                         (display "caso Function \n"))
                         'unit]))
@@ -122,16 +118,14 @@
                                     [(memq pr '(=)) (cond 
                                                         [(eq? e0-type e1-type) e0-type]
                                                         [else (error "Do not exist type for assignation of distinct types")])]))]
-                ; [(,i [,e* ...]) (begin
-                ;                 (get-type-Expr i i)
-                ;                 (map (lambda (e) (get-type-Expr e table)) e*)
-                ;                 table)]
-                
-                ;                 ([types-list (map (lambda (e) (get-type-Expr e table)) e*)]
-                ;                 [is-same-type-list (foldr eq? (car types-list) (cdr types-list))])
-                ;                 (if is-same-type-list
-                ;                     (car types-list)
-                ;                     (error "Do not exist type for a heterogeneus list")))]
+                [(,i [,e* ...]) (let* ([args-types (map (lambda (e) (get-type-Expr e table)) e*)]
+                                        [function-type (get-type-Expr i table)]
+                                        [pars-types (if (eq? function-type 'undefined) 'noargs (function-pars function-type))]
+                                        [return-type (if (eq? function-type 'undefined) 'unit (function-return-type function-type))]
+                                        [args-types (map (lambda (e) (get-type-Expr e table)) e*)])
+                                    (if (equal? pars-types args-types)
+                                        return-type
+                                        (error "Function call" i "has wrong arguments types" args-types pars-types)))]
                 [(,e* ...) (begin
                                 (map (lambda (e) (get-type-Expr e table)) e*)
                                 'unit)]
@@ -144,6 +138,13 @@
     (match type
         [(list arrayType t) (and (eq? arrayType 'arrType) (not (eq? (type? t) '())))]
         [else false]))
+
+(define (function-pars f-type) 
+    (cdr (car (cdr f-type))))
+
+(define (function-return-type f-type) 
+    (car (car (cdr f-type))))
+
 (define input-get-type (parser-jelly
     '(program
         (main
@@ -181,12 +182,12 @@
 (define input-get-type2 (parser-jelly
     '(program
         (main
-                    (   (arrElement var_4 #t)
+            (   (var_1 (5 5))
                     )))))
 
 (define input-get-type2-table
     (make-hash '((var_0 . int)
-        (var_1 . undefined)
+        (var_1 . '(int int bool))
         (var_2 . int)
         (var_3 . undefined)
         (var_4 . (arrType int)))))
