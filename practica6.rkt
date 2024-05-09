@@ -42,7 +42,9 @@
 
 (define (type-check-DeclarationType ir table) 
         (nanopass-case (jelly DeclarationType) ir
+                ; Primitive type
                 [,t t]
+                ; Array type
                 [(arrType ,t) `(arrType ,t)]
                 [else (begin 
                         (display "caso DeclarationType \n"))
@@ -54,6 +56,7 @@
                         [(integer? c) 'int]
                         [(boolean? c) 'bool]
                         [else (error "Do not exist type for this constant" c)])]
+                ; Declaration type
                 [,dt (begin
                             (type-check-DeclarationType dt table))]
                 [,pr 'unit]
@@ -87,10 +90,7 @@
                                                 (type-check-Expr e2 table))
                                             'unit
                                             (error "If-Else type structure incorrect")))]
-                
-                
-                
-                
+                ; Accesing to an element of an array of the shape (array[<number>])
                 [(arrElement ,e1 ,e2) (begin
                                         (let ([e1-type (type-check-Expr e1 table)])
                                             (if (and 
@@ -114,8 +114,9 @@
                                                                     'bool
                                                                     (error "Do not exist type for boolean operation of non boolean expressions" e0 e1))]
                                     [(memq pr '(=)) (cond 
-                                                        [(eq? e0-type e1-type) e0-type]
+                                                        [(equal? e0-type e1-type) e0-type]
                                                         [else (error "Do not exist type for assignation of distinct types" e0 e0-type e1 e1-type)])]))]
+                ; Function call case
                 [(,i [,e* ...]) (let* ([args-types (map (lambda (e) (type-check-Expr e table)) e*)]
                                         [function-type (type-check-Expr i table)]
                                         [pars-types (if (eq? function-type 'undefined) 'noargs (function-pars function-type))]
@@ -124,10 +125,12 @@
                                     (if (equal? pars-types args-types)
                                         return-type
                                         (error "Function call" i "has wrong arguments types" args-types pars-types)))]
-                [(,e* ...) (begin
-                                (map (lambda (e) (type-check-Expr e table)) e*)
-                                (if (= (length e*) 1) (type-check-Expr (car e*) table)
-                                'unit))]
+                [(,e* ...) (let*
+                                ([expressions-types-list (map (lambda (e) (type-check-Expr e table)) e*)]
+                                    [same-type? (foldl (lambda (t1 t2) (if (eq? t1 t2) t1 #f)) (car expressions-types-list) expressions-types-list)])
+                                ; If all the expressions are of the same type return arrType <type> to enable typechecking of array initialization of the shape 
+                                ; (= (decl a (arrType int)) {1,2,3})
+                                (if (= (length e*) 1) (type-check-Expr (car e*) table) (if same-type? `(arrType ,(car expressions-types-list)) 'unit)))]
                 [else (begin 
                         (display "caso Expr \n")
                         (display ir)
@@ -182,6 +185,7 @@
         (main
             ((decl var_8 int)
             (decl var_9 int)
+            (= (decl var_4 (arrType int)) (1 2))
             (= (decl var_11 int) (= var_8 (+ var_8 (1))))
             (= var_8 (+ var_8 (1)))
             (= (decl var_10 int) (gdc (var_11 var_9)))))
