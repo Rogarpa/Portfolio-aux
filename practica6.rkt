@@ -3,45 +3,44 @@
 (require "symbol-table.rkt")
 
 
-; Receive a expression of jelly language and returns a dictionary with his variables and his types, undefined if has no type
-; Receive a expression of jelly language and returns a dictionary with his variables and his types, undefined if has no type
-(define (get-type ir) (let*([symbol-table (symbol-table ir)])
-                            (get-type-Program ir symbol-table)))
-(define (get-type-Program ir table)
+; Receive a expression of jelly language and returns if types system is consistent inside it.
+(define (type-check ir table) (type-check-Program ir table))
+
+(define (type-check-Program ir table)
         (nanopass-case (jelly Program) ir
                 [(program ,m) (begin
-                                (get-type-Main m table)
+                                (type-check-Main m table)
                                 'unit)]
                 [(program ,m [,f* ... ,f]) (begin
-                                                (get-type-Main m table)
-                                                (map (lambda (f) (get-type-Function f table)) f*)
-                                                (get-type-Function f table)
+                                                (type-check-Main m table)
+                                                (map (lambda (f) (type-check-Function f table)) f*)
+                                                (type-check-Function f table)
                                                 'unit)]
                 [else (begin (display "caso Program \n"))]))
 
-(define (get-type-Main ir table)
+(define (type-check-Main ir table)
         (nanopass-case (jelly Main) ir
                 [(main [,e* ... ,e]) (begin
-                                        (map (lambda (e) (get-type-Expr e table)) e*)
-                                        (get-type-Expr e table)
+                                        (map (lambda (e) (type-check-Expr e table)) e*)
+                                        (type-check-Expr e table)
                                         'unit)]
                 [else (begin 
                         (display "caso Main \n")
                         'unit)]))
 
-(define (get-type-Function ir table) 
+(define (type-check-Function ir table) 
         (nanopass-case (jelly Function) ir
         [(,i ([,i* ,dt*] ...) ,t ,e) (begin
-                                        (get-type-Expr e table)
+                                        (type-check-Expr e table)
                                         'unit)]
         [(,i ([,i* ,dt*] ...) ,e) (begin
-                                        (get-type-Expr e table)
+                                        (type-check-Expr e table)
                                         'unit)]
                 [else (begin 
                         (display "caso Function \n"))
                         'unit]))
 
-(define (get-type-DeclarationType ir table) 
+(define (type-check-DeclarationType ir table) 
         (nanopass-case (jelly DeclarationType) ir
                 [,t t]
                 [(arrType ,t) `(arrType ,t)]
@@ -49,47 +48,43 @@
                         (display "caso DeclarationType \n"))
                         'unit]))
 
-(define (get-type-Expr ir table) 
+(define (type-check-Expr ir table) 
         (nanopass-case (jelly Expr) ir
                 [,c (cond 
                         [(integer? c) 'int]
                         [(boolean? c) 'bool]
                         [else (error "Do not exist type for this constant" c)])]
                 [,dt (begin
-                            (get-type-DeclarationType dt table))]
+                            (type-check-DeclarationType dt table))]
                 [,pr 'unit]
                 [,i (let ([id-type (hash-ref table i)])
                         (if (eq? id-type 'undefined)
                             (error "Id type declaration missing" i)
                             id-type))]
                 [(arrIndex ,e) (begin
-                                (get-type-Expr e table))]
+                                (type-check-Expr e table))]
                 
                 [(length ,e) (begin
-                                (if (arrayType? (get-type-Expr e table))
+                                (if (arrayType? (type-check-Expr e table))
                                     'int
-                                    (error "Do not exist type for length of this array" (get-type-Expr e table))))]
+                                    (error "Do not exist type for length of this array" (type-check-Expr e table))))]
 
                 [(return ,e) (begin
-                                (get-type-Expr e table))]
+                                (type-check-Expr e table))]
                 [(while ,e0 ,e1) (begin
-                                    (if (and (eq? (get-type-Expr e0 table) 'bool)
-                                            ; (eq? (get-type-Expr e1 table) 'unit))
-                                            (get-type-Expr e1 table))
+                                    (if (and (eq? (type-check-Expr e0 table) 'bool)
+                                            (type-check-Expr e1 table))
                                         'unit
                                         (error "While type structure incorrect")))]
                 [(if-stn ,e0 ,e1) (begin
-                                    (if (and (eq? (get-type-Expr e0 table) 'bool)
-                                            ; (eq? (get-type-Expr e1 table) 'unit))
-                                            (get-type-Expr e1 table))
+                                    (if (and (eq? (type-check-Expr e0 table) 'bool)
+                                            (type-check-Expr e1 table))
                                         'unit
                                         (error "If type structure incorrect")))]
                 [(if-stn ,e0 ,e1 ,e2) (begin
-                                        (if (and (eq? (get-type-Expr e0 table) 'bool)
-                                                ; (eq? (get-type-Expr e1 table) 'unit)
-                                                (get-type-Expr e1 table)
-                                                ; (eq? (get-type-Expr e2 table) 'unit))
-                                                (get-type-Expr e2 table))
+                                        (if (and (eq? (type-check-Expr e0 table) 'bool)
+                                                (type-check-Expr e1 table)
+                                                (type-check-Expr e2 table))
                                             'unit
                                             (error "If-Else type structure incorrect")))]
                 
@@ -97,17 +92,17 @@
                 
                 
                 [(arrElement ,e1 ,e2) (begin
-                                        (let ([e1-type (get-type-Expr e1 table)])
+                                        (let ([e1-type (type-check-Expr e1 table)])
                                             (if (and 
                                                 (arrayType? e1-type)
-                                                (eq? (get-type-Expr e2 table) 'int))
+                                                (eq? (type-check-Expr e2 table) 'int))
                                                 (car (cdr e1-type))
                                                 (error "Do not exist type for arrElement" e2 "of" e1))))]
-                [(decl ,i ,dt) (get-type-Expr dt table)]
+                [(decl ,i ,dt) (type-check-Expr dt table)]
                 
                 [(,pr ,e0 ,e1) (let*
-                                ([e0-type (get-type-Expr e0 table)]
-                                [e1-type (get-type-Expr e1 table)])
+                                ([e0-type (type-check-Expr e0 table)]
+                                [e1-type (type-check-Expr e1 table)])
                                 (cond 
                                     [(memq pr '(+ - * / %)) (if (and (eq? e0-type 'int) (eq? e1-type 'int))
                                                                     'int
@@ -121,17 +116,17 @@
                                     [(memq pr '(=)) (cond 
                                                         [(eq? e0-type e1-type) e0-type]
                                                         [else (error "Do not exist type for assignation of distinct types" e0 e0-type e1 e1-type)])]))]
-                [(,i [,e* ...]) (let* ([args-types (map (lambda (e) (get-type-Expr e table)) e*)]
-                                        [function-type (get-type-Expr i table)]
+                [(,i [,e* ...]) (let* ([args-types (map (lambda (e) (type-check-Expr e table)) e*)]
+                                        [function-type (type-check-Expr i table)]
                                         [pars-types (if (eq? function-type 'undefined) 'noargs (function-pars function-type))]
                                         [return-type (if (eq? function-type 'undefined) 'unit (function-return-type function-type))]
-                                        [args-types (map (lambda (e) (get-type-Expr e table)) e*)])
+                                        [args-types (map (lambda (e) (type-check-Expr e table)) e*)])
                                     (if (equal? pars-types args-types)
                                         return-type
                                         (error "Function call" i "has wrong arguments types" args-types pars-types)))]
                 [(,e* ...) (begin
-                                (map (lambda (e) (get-type-Expr e table)) e*)
-                                (if (= (length e*) 1) (get-type-Expr (car e*) table)
+                                (map (lambda (e) (type-check-Expr e table)) e*)
+                                (if (= (length e*) 1) (type-check-Expr (car e*) table)
                                 'unit))]
                 [else (begin 
                         (display "caso Expr \n")
@@ -181,9 +176,8 @@
                         (= i (+ i 1))}))))
 )))
 
-; Input used for test type-checking 
-; (define input-get-type (rename-var input-get))
-(define input-get-type-fixed (parser-jelly
+; Input used for test type-checking (input-get variable after renaming)
+(define input-type-check (parser-jelly
     '(program
         (main
             ((decl var_8 int)
@@ -221,8 +215,8 @@
                 (= var_3 (+ var_3 (1))))))))))
 )
 
-; Symbol table for type-checking of input-get-type variable
-(define input-get-type-symbol-table
+; Symbol table for type-checking of input-type-check program
+(define input-type-check-symbol-table
 (make-hash
         '((gdc . (int int int))
        (var_0 . int)
