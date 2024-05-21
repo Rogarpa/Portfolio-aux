@@ -1,56 +1,56 @@
 ALTER TABLE inf_empleado_empresa
-KEY `fk_empleado_cat_cp` (`id_cp`),
+KEY `fk_empleado_cat_cp` (`id_cp`);
 
 ALTER TABLE inf_empleado_empresa
-ADD CONSTRAINT `fk_det_empleado__category` FOREIGN KEY (`id_tabla`) REFERENCES `category` (`id_tabla`),;
+ADD CONSTRAINT `fk_empleado_cp` FOREIGN KEY (`id_cp`) REFERENCES `cat_cp` (`id_cp`);
 
 ALTER TABLE inf_empleado_empresa
-KEY `fk_empleado_cat_uso_cfdi` (`id_uso_cfdi`),
+KEY `fk_empleado_cat_uso_cfdi` (`id_uso_cfdi`);
 
 ALTER TABLE inf_empleado_empresa
-ADD CONSTRAINT `fk_det_empleado__category` FOREIGN KEY (`id_tabla`) REFERENCES `category` (`id_tabla`),;
-
-
-ALTER TABLE inf_empleado_empresa
-KEY `fk_empleado_cat_sind` (`id_sind`),
-
-ALTER TABLE inf_empleado_empresa
-ADD CONSTRAINT `fk_det_empleado__category` FOREIGN KEY (`id_tabla`) REFERENCES `category` (`id_tabla`),;
+ADD CONSTRAINT `fk_empleado_uso_cfdi` FOREIGN KEY (`id_uso_cfdi`) REFERENCES `cat_uso_cfdi` (`id_uso_cfdi`);
 
 
 ALTER TABLE inf_empleado_empresa
-KEY `fk_empleado_cat_depto` (`id_depto`),
+KEY `fk_empleado_cat_sind` (`id_sind`);
 
 ALTER TABLE inf_empleado_empresa
-ADD CONSTRAINT `fk_det_empleado__category` FOREIGN KEY (`id_tabla`) REFERENCES `category` (`id_tabla`),;
-
-
-ALTER TABLE inf_empleado_empresa
-KEY `fk_empleado_cat_riesgo_puesto` (`id_riesgo_puesto`),
-
-ALTER TABLE inf_empleado_empresa
-ADD CONSTRAINT `fk_det_empleado__category` FOREIGN KEY (`id_tabla`) REFERENCES `category` (`id_tabla`),;
+ADD CONSTRAINT `fk_empleado_sind` FOREIGN KEY (`id_sind`) REFERENCES `cat_sind` (`id_sind`);
 
 
 ALTER TABLE inf_empleado_empresa
-KEY `fk_empleado_cat_periodicidad` (`id_periodicidad`),
+KEY `fk_empleado_cat_depto` (`id_depto`);
 
 ALTER TABLE inf_empleado_empresa
-ADD CONSTRAINT `fk_det_empleado__category` FOREIGN KEY (`id_tabla`) REFERENCES `category` (`id_tabla`),;
-
-
-ALTER TABLE inf_empleado_empresa
-KEY `fk_empleado_cat_salario_diario` (`id_salario_diario`),
-
-ALTER TABLE inf_empleado_empresa
-ADD CONSTRAINT `fk_det_empleado__category` FOREIGN KEY (`id_tabla`) REFERENCES `category` (`id_tabla`),;
+ADD CONSTRAINT `fk_empleado_depto` FOREIGN KEY (`id_depto`) REFERENCES `cat_depto` (`id_depto`);
 
 
 ALTER TABLE inf_empleado_empresa
-KEY `fk_empleado_cat_ent_fed` (`id_ent_fed`),
+KEY `fk_empleado_cat_riesgo_puesto` (`id_riesgo_puesto`);
 
 ALTER TABLE inf_empleado_empresa
-ADD CONSTRAINT `fk_det_empleado__category` FOREIGN KEY (`id_tabla`) REFERENCES `category` (`id_tabla`),;
+ADD CONSTRAINT `fk_empleado_riesgo_puesto` FOREIGN KEY (`id_riesgo_puesto`) REFERENCES `cat_riesgo_puesto` (`id_riesgo_puesto`);
+
+
+ALTER TABLE inf_empleado_empresa
+KEY `fk_empleado_cat_periodicidad` (`id_periodicidad`);
+
+ALTER TABLE inf_empleado_empresa
+ADD CONSTRAINT `fk_empleado_periodicidad` FOREIGN KEY (`id_periodicidad`) REFERENCES `cat_periodicidad` (`id_periodicidad`);
+
+
+ALTER TABLE inf_empleado_empresa
+KEY `fk_empleado_cat_salario_diario` (`id_salario_diario`);
+
+ALTER TABLE inf_empleado_empresa
+ADD CONSTRAINT `fk_empleado_salario_diario` FOREIGN KEY (`id_salario_diario`) REFERENCES `cat_salario_diario` (`id_salario_diario`);
+
+
+ALTER TABLE inf_empleado_empresa
+KEY `fk_empleado_cat_ent_fed` (`id_ent_fed`);
+
+ALTER TABLE inf_empleado_empresa
+ADD CONSTRAINT `fk_empleado_ent_fed` FOREIGN KEY (`id_ent_fed`) REFERENCES `cat_ent_fed` (`id_ent_fed`);
 
 -- Columnas faltantes de det_empleado==inf_empleado_empresa
 `nu_cp` varchar(10) NOT NULL,
