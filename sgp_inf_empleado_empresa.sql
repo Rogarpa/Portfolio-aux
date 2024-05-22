@@ -1,3 +1,12 @@
+ALTER TABLE inf_empleado_empresa
+ADD COLUMN `cp` varchar(10);
+
+ALTER TABLE inf_empleado_empresa
+ADD COLUMN `sind` tinyint(1);
+
+ALTER TABLE inf_empleado_empresa
+ADD COLUMN `cat_salario_diario` decimal(10,2);
+
 CREATE TABLE `cat_uso_cfdi` (
   `cd_uso_cfdi` varchar(5) NOT NULL,
   `nb_uso_cfdi` varchar(150) NOT NULL,
@@ -10,11 +19,11 @@ CREATE TABLE `cat_departamento` (
   PRIMARY KEY (`cd_depto`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-CREATE TABLE `cat_riesgo_puesto` (
-  `cd_riesgo_puesto` varchar(5) NOT NULL,
-  `nb_riesgo_puesto` varchar(150) NOT NULL,
-  PRIMARY KEY (`cd_riesgo_puesto`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+-- CREATE TABLE `cat_riesgo_puesto` (
+--   `cd_riesgo_puesto` varchar(5) NOT NULL,
+--   `nb_riesgo_puesto` varchar(150) NOT NULL,
+--   PRIMARY KEY (`cd_riesgo_puesto`)
+-- ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `cat_periodicidad` (
   `cd_periodicidad` varchar(5) NOT NULL,
@@ -31,7 +40,7 @@ CREATE TABLE `cat_ent_federal` (
 
 
 ALTER TABLE inf_empleado_empresa
-ADD COLUMN `cd_uso_cfdi` varchar(5) NOT NULL;
+ADD COLUMN `cd_uso_cfdi` varchar(5);
 
 ALTER TABLE inf_empleado_empresa
 ADD KEY `FK_det_empleado_empresa__cat_uso_cfdi` (`cd_uso_cfdi`);
@@ -42,7 +51,7 @@ ADD CONSTRAINT `FK_det_empleado_empresa__cat_uso_cfdi` FOREIGN KEY (`cd_uso_cfdi
 
 
 ALTER TABLE inf_empleado_empresa
-ADD COLUMN `cd_depto` varchar(150) NOT NULL;
+ADD COLUMN `cd_depto` varchar(150);
 
 ALTER TABLE inf_empleado_empresa
 ADD KEY `FK_det_empleado_empresa__cat_departamento` (`cd_depto`);
@@ -50,19 +59,22 @@ ADD KEY `FK_det_empleado_empresa__cat_departamento` (`cd_depto`);
 ALTER TABLE inf_empleado_empresa
 ADD CONSTRAINT `FK_det_empleado_empresa__cat_departamento` FOREIGN KEY (`cd_depto`) REFERENCES `cat_departamento` (`cd_depto`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
+-- Preexisiting table cat_riesgo_puesto 
+ALTER TABLE cat_riesgo_puesto
+ADD CONSTRAINT `PK_det_empleado_empresa__cat_riesgo_puesto` PRIMARY KEY (`cd_riesgo`);
 
 ALTER TABLE inf_empleado_empresa
-ADD COLUMN `cd_riesgo_puesto` varchar(5) NOT NULL;
+ADD COLUMN `cd_riesgo` int;
 
 ALTER TABLE inf_empleado_empresa
-ADD KEY `FK_det_empleado_empresa__cat_riesgo_puesto` (`cd_riesgo_puesto`);
+ADD KEY `FK_det_empleado_empresa__cat_riesgo_puesto` (`cd_riesgo`);
 
 ALTER TABLE inf_empleado_empresa
-ADD CONSTRAINT `FK_det_empleado_empresa__cat_riesgo_puesto` FOREIGN KEY (`cd_riesgo_puesto`) REFERENCES `cat_riesgo_puesto` (`cd_riesgo_puesto`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ADD CONSTRAINT `FK_det_empleado_empresa__cat_riesgo_puesto` FOREIGN KEY (`cd_riesgo`) REFERENCES `cat_riesgo_puesto` (`cd_riesgo`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 
 ALTER TABLE inf_empleado_empresa
-ADD COLUMN `cd_periodicidad` varchar(5) NOT NULL;
+ADD COLUMN `cd_periodicidad` varchar(5);
 
 ALTER TABLE inf_empleado_empresa
 ADD KEY `FK_det_empleado_empresa__cat_periodicidad` (`cd_periodicidad`);
@@ -73,7 +85,7 @@ ADD CONSTRAINT `FK_det_empleado_empresa__cat_periodicidad` FOREIGN KEY (`cd_peri
 
 
 ALTER TABLE inf_empleado_empresa
-ADD COLUMN `cd_ent_fed` varchar(5) NOT NULL;
+ADD COLUMN `cd_ent_fed` varchar(5);
 
 ALTER TABLE inf_empleado_empresa
 ADD KEY `FK_det_empleado_empresa__cat_ent_federal` (`cd_ent_fed`);
