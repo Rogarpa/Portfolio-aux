@@ -1,20 +1,7 @@
--- NO NEED
-CREATE TABLE `cat_cp` (
-  `nu_cp` varchar(10) NOT NULL,
-  `nb_cp` varchar(150) NOT NULL,
-  PRIMARY KEY (`nu_cp`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
 CREATE TABLE `cat_uso_cfdi` (
   `cd_uso_cfdi` varchar(5) NOT NULL,
   `nb_uso_cfdi` varchar(150) NOT NULL,
   PRIMARY KEY (`cd_uso_cfdi`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
--- NO NEED
-CREATE TABLE `cat_sind` (
-  `st_sind` tinyint(1) NOT NULL,
-  `nb_sind` varchar(150) NOT NULL,
-  PRIMARY KEY (`st_sind`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `cat_departamento` (
@@ -34,12 +21,6 @@ CREATE TABLE `cat_periodicidad` (
   `nb_periodicidad` varchar(150) NOT NULL,
   PRIMARY KEY (`cd_periodicidad`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
--- NO NEED
-CREATE TABLE `cat_salario_diario` (
-  `nu_salario_diario` decimal(10,2) DEFAULT NULL,
-  `nb_salario_diario` varchar(150) NOT NULL,
-  PRIMARY KEY (`nu_salario_diario`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `cat_ent_federal` (
   `cd_ent_fed` varchar(5) NOT NULL,
@@ -48,16 +29,6 @@ CREATE TABLE `cat_ent_federal` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
--- NO NEED
-
-ALTER TABLE inf_empleado_empresa
-ADD COLUMN `nu_cp` varchar(10) NOT NULL;
-
-ALTER TABLE inf_empleado_empresa
-ADD KEY `FK_det_empleado_empresa__cat_cp` (`nu_cp`);
-
-ALTER TABLE inf_empleado_empresa
-ADD CONSTRAINT `FK_det_empleado_empresa__cat_cp` FOREIGN KEY (`nu_cp`) REFERENCES `cat_cp` (`nu_cp`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 ALTER TABLE inf_empleado_empresa
 ADD COLUMN `cd_uso_cfdi` varchar(5) NOT NULL;
@@ -69,14 +40,6 @@ ALTER TABLE inf_empleado_empresa
 ADD CONSTRAINT `FK_det_empleado_empresa__cat_uso_cfdi` FOREIGN KEY (`cd_uso_cfdi`) REFERENCES `cat_uso_cfdi` (`cd_uso_cfdi`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 
-ALTER TABLE inf_empleado_empresa
-ADD COLUMN `st_sind` tinyint(1) NOT NULL;
--- NO NEED
-ALTER TABLE inf_empleado_empresa
-ADD KEY `FK_det_empleado_empresa__cat_sind` (`st_sind`);
-
-ALTER TABLE inf_empleado_empresa
-ADD CONSTRAINT `FK_det_empleado_empresa__cat_sind` FOREIGN KEY (`st_sind`) REFERENCES `cat_sind` (`st_sind`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 ALTER TABLE inf_empleado_empresa
 ADD COLUMN `cd_depto` varchar(150) NOT NULL;
@@ -87,6 +50,7 @@ ADD KEY `FK_det_empleado_empresa__cat_departamento` (`cd_depto`);
 ALTER TABLE inf_empleado_empresa
 ADD CONSTRAINT `FK_det_empleado_empresa__cat_departamento` FOREIGN KEY (`cd_depto`) REFERENCES `cat_departamento` (`cd_depto`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
+
 ALTER TABLE inf_empleado_empresa
 ADD COLUMN `cd_riesgo_puesto` varchar(5) NOT NULL;
 
@@ -95,6 +59,7 @@ ADD KEY `FK_det_empleado_empresa__cat_riesgo_puesto` (`cd_riesgo_puesto`);
 
 ALTER TABLE inf_empleado_empresa
 ADD CONSTRAINT `FK_det_empleado_empresa__cat_riesgo_puesto` FOREIGN KEY (`cd_riesgo_puesto`) REFERENCES `cat_riesgo_puesto` (`cd_riesgo_puesto`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
 
 ALTER TABLE inf_empleado_empresa
 ADD COLUMN `cd_periodicidad` varchar(5) NOT NULL;
@@ -106,14 +71,6 @@ ALTER TABLE inf_empleado_empresa
 ADD CONSTRAINT `FK_det_empleado_empresa__cat_periodicidad` FOREIGN KEY (`cd_periodicidad`) REFERENCES `cat_periodicidad` (`cd_periodicidad`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 
-ALTER TABLE inf_empleado_empresa
-ADD COLUMN `nu_salario_diario` decimal(10,2) DEFAULT NULL;
--- NO NEED
-ALTER TABLE inf_empleado_empresa
-ADD KEY `FK_det_empleado_empresa__cat_salario_diario` (`nu_salario_diario`);
-
-ALTER TABLE inf_empleado_empresa
-ADD CONSTRAINT `FK_det_empleado_empresa__cat_salario_diario` FOREIGN KEY (`nu_salario_diario`) REFERENCES `cat_salario_diario` (`nu_salario_diario`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 ALTER TABLE inf_empleado_empresa
 ADD COLUMN `cd_ent_fed` varchar(5) NOT NULL;
