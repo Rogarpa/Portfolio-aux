@@ -1,11 +1,11 @@
 ALTER TABLE inf_empleado_empresa
-ADD COLUMN `cp` varchar(10);
+ADD COLUMN `nu_cp` varchar(10);
 
 ALTER TABLE inf_empleado_empresa
-ADD COLUMN `sind` tinyint(1);
+ADD COLUMN `st_sind` tinyint(1);
 
 ALTER TABLE inf_empleado_empresa
-ADD COLUMN `cat_salario_diario` decimal(10,2);
+ADD COLUMN `nu_salario_diario` decimal(10,2);
 
 CREATE TABLE `cat_uso_cfdi` (
   `cd_uso_cfdi` varchar(5) NOT NULL,
